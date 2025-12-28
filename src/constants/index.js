@@ -1,5 +1,5 @@
-import project1 from "../assets/projects/link-ingestor-v2.png";
-import project2 from "../assets/projects/chat-backend-v2.png";
+import linkMinimal from "../assets/projects/link_minimal.png";
+import chatMinimal from "../assets/projects/chat_minimal.png";
 import project4 from "../assets/projects/blog-auth-v3.png";
 import yupchaLogo from "../assets/yupcha_logo.jpg";
 import collegeLogo from "../assets/college logo.png";
@@ -24,7 +24,7 @@ export const EXPERIENCES = [
 export const PROJECTS = [
   {
     title: "Link Ingestor API",
-    image: project1,
+    image: linkMinimal,
     description:
       "A high-performance autonomous system for large-scale webpage data ingestion. Features intelligent backlink discovery via Bing Search API and async processing architecture.",
     technologies: ["FastAPI", "PostgreSQL", "Redis", "Celery", "Docker"],
@@ -32,7 +32,7 @@ export const PROJECTS = [
   },
   {
     title: "ChatApp Backend",
-    image: project2,
+    image: chatMinimal,
     description:
       "A scalable messaging backend integrated with Google Gemini AI for real-time intelligent responses. Uses Celery for non-blocking AI task processing and conversation context management.",
     technologies: ["FastAPI", "Gemini AI", "Redis", "Celery", "PostgreSQL"],
