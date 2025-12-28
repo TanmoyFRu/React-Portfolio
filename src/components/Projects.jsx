@@ -131,7 +131,10 @@ const Projects = () => {
         ref={scrollRef}
         className={`flex items-stretch gap-6 md:gap-8 overflow-x-auto pb-12 scrollbar-hide px-4 ${isInteracting ? 'cursor-grabbing' : 'cursor-grab'
           }`}
-        style={{ scrollBehavior: isInteracting ? 'auto' : 'smooth' }}
+        style={{
+          scrollBehavior: 'auto', // Always use auto for programmatic animation to avoid judder
+          willChange: 'scroll-position' // Hint to browser for optimization
+        }}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
