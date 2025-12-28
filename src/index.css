@@ -4,6 +4,26 @@
 @tailwind components;
 @tailwind utilities;
 
-:root{
-font-family : "Inter", sans-serif;
+:root {
+  font-family: "Inter", sans-serif;
+}
+
+.bg-radial-gradient {
+  background-color: #000;
+  background-image: radial-gradient(circle at 50% 0%,
+      rgba(79, 70, 229, 0.4) 0%,
+      rgba(0, 0, 0, 1) 90%);
+}
+
+@layer utilities {
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+  }
 }
