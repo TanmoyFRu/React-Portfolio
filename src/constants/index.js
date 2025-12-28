@@ -6,7 +6,9 @@ import collegeLogo from "../assets/college logo.png";
 
 export const HERO_CONTENT = `I am a passionate backend developer with a deep expertise in crafting robust, scalable, and secure server-side applications. I specialize in Python and FastAPI, with a strong foundation in database management (PostgreSQL, MySQL, MongoDB) and real-time systems. My goal is to build high-performance APIs and autonomous systems that solve complex backend challenges and drive seamless digital experiences.`;
 
-export const ABOUT_TEXT = `I am a dedicated backend developer currently working in a startup company Yupcha. My expertise lies in building efficient RESTful APIs, implementing robust authentication systems, and designing scalable database architectures. I have a passion for automation and data ingestion, as seen in my various open-source projects. I thrive on solving complex server-side problems and continuously optimizing backend performance. Outside of coding, I enjoy exploring the latest in tech, staying active, and constant learning.`;
+export const ABOUT_TEXT = `Backend developer at Yupcha, specializing in RESTful APIs, authentication systems, and scalable database architecture. I design and build automation tools, data pipelines, and high-performance backend services with a focus on clean code and system reliability.
+
+My tech stack includes Python, FastAPI, PostgreSQL, Redis, and Docker. I enjoy solving complex problems, optimizing queries, and building systems that scale. When I'm not coding, I'm exploring new technologies and contributing to open-source projects.`;
 
 export const EXPERIENCES = [
   {
