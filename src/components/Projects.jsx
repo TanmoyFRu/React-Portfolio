@@ -133,7 +133,7 @@ const Projects = () => {
         transition={{ duration: 1 }}
         className="my-20 text-center text-4xl lg:text-5xl font-bold tracking-tight [color:var(--text-primary)]"
       >
-        Personal <span className="[color:var(--text-secondary)] opacity-60">Projects</span>
+        Personal <span className="[color:var(--accent)]">Projects</span>
       </motion.h2>
 
       <div className="relative flex overflow-hidden py-10">

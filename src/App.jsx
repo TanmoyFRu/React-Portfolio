@@ -10,6 +10,9 @@ import Contact from "./components/Contact"
 import Noise from "./components/Noise"
 import CustomCursor from "./components/CustomCursor"
 import ScrollToTop from "./components/ScrollToTop"
+import Footer from "./components/Footer"
+import SplashScreen from "./components/SplashScreen"
+import SectionNav from "./components/SectionNav"
 import Lenis from "lenis"
 import { motion, AnimatePresence, useScroll, useSpring } from "framer-motion"
 import { FaTerminal } from "react-icons/fa"
@@ -18,6 +21,7 @@ import Terminal from "./components/Terminal"
 
 const App = () => {
   const [isTerminalOpen, setIsTerminalOpen] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, {
     stiffness: 100,
@@ -67,6 +71,8 @@ const App = () => {
 
   return (
     <div className="overflow-x-hidden antialiased selection:bg-indigo-500/30 selection:text-indigo-200 cursor-none">
+      {isLoading && <SplashScreen onComplete={() => setIsLoading(false)} />}
+
       <CustomCursor />
       <Noise />
 
@@ -82,9 +88,12 @@ const App = () => {
         <Navbar onTerminalToggle={() => setIsTerminalOpen(true)} />
 
         <div className="px-8">
-          <Hero />
+          <div id="hero">
+            <Hero />
+          </div>
 
           <motion.section
+            id="about"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
@@ -94,6 +103,7 @@ const App = () => {
           </motion.section>
 
           <motion.section
+            id="technologies"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
@@ -103,6 +113,7 @@ const App = () => {
           </motion.section>
 
           <motion.section
+            id="experience"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
@@ -122,6 +133,7 @@ const App = () => {
         </div>
 
         <motion.div
+          id="projects"
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
@@ -133,6 +145,7 @@ const App = () => {
 
         <div className="px-8">
           <motion.section
+            id="contact"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
@@ -141,9 +154,12 @@ const App = () => {
             <Contact />
           </motion.section>
         </div>
+
+        <Footer />
       </div>
 
       <ScrollToTop />
+      <SectionNav />
 
       <Terminal isOpen={isTerminalOpen} onClose={() => setIsTerminalOpen(false)} />
     </div>

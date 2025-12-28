@@ -1,10 +1,48 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { ABOUT_TEXT } from "../constants"
-import { motion } from "framer-motion"
-import { FaMapMarkerAlt, FaClock, FaCircle } from "react-icons/fa"
+import { motion, useInView } from "framer-motion"
+import { FaMapMarkerAlt, FaClock, FaCircle, FaCode, FaBriefcase, FaRocket, FaTerminal, FaSun, FaStar, FaMoon } from "react-icons/fa"
+import { useTheme } from "../context/ThemeContext"
+
+// Animated Counter Component
+const AnimatedCounter = ({ end, duration = 2, suffix = "" }) => {
+  const [count, setCount] = useState(0)
+  const ref = useRef(null)
+  const isInView = useInView(ref, { once: true })
+
+  useEffect(() => {
+    if (!isInView) return
+
+    let startTime = null
+    const animate = (timestamp) => {
+      if (!startTime) startTime = timestamp
+      const progress = Math.min((timestamp - startTime) / (duration * 1000), 1)
+      setCount(Math.floor(progress * end))
+      if (progress < 1) {
+        requestAnimationFrame(animate)
+      }
+    }
+    requestAnimationFrame(animate)
+  }, [isInView, end, duration])
+
+  return <span ref={ref}>{count}{suffix}</span>
+}
+
+// Theme-specific decoration icon for stats
+const ThemeIcon = ({ theme }) => {
+  const iconClass = "text-[8px] [color:var(--accent)] opacity-60"
+  switch (theme) {
+    case 'emerald': return <FaTerminal className={iconClass} />
+    case 'solar': return <FaSun className={iconClass} />
+    case 'cosmic': return <FaStar className={iconClass} />
+    case 'midnight':
+    default: return <FaMoon className={iconClass} />
+  }
+}
 
 const About = () => {
   const [time, setTime] = useState(new Date())
+  const { theme } = useTheme()
 
   useEffect(() => {
     const timer = setInterval(() => setTime(new Date()), 1000)
@@ -18,6 +56,17 @@ const About = () => {
     hour12: true
   })
 
+  // Calculate experience dynamically from start date (September 2025)
+  const startDate = new Date(2025, 8, 1) // September 2025 (month is 0-indexed)
+  const now = new Date()
+  const experienceMonths = Math.floor((now - startDate) / (1000 * 60 * 60 * 24 * 30))
+
+  const stats = [
+    { icon: FaBriefcase, value: experienceMonths, suffix: "+", label: "Months Experience" },
+    { icon: FaRocket, value: 22, suffix: "", label: "Projects Built" },
+    { icon: FaCode, value: 7, suffix: "+", label: "Technologies" },
+  ]
+
   return (
     <div className="pb-24">
       <motion.h2
@@ -26,7 +75,7 @@ const About = () => {
         transition={{ duration: 1 }}
         className="my-20 text-center text-4xl lg:text-5xl font-bold tracking-tight [color:var(--text-primary)]"
       >
-        About <span className="[color:var(--text-secondary)] opacity-60">Me</span>
+        About <span className="[color:var(--accent)]">Me</span>
       </motion.h2>
 
       <div className="flex flex-wrap lg:flex-nowrap items-start justify-center gap-8 max-w-6xl mx-auto px-4">
@@ -43,14 +92,45 @@ const About = () => {
           </p>
         </motion.div>
 
-        {/* Live Status Bento Card */}
+        {/* Right Column - Stats & Status */}
         <motion.div
           whileInView={{ opacity: 1, x: 0 }}
           initial={{ opacity: 0, x: 50 }}
           transition={{ duration: 1, delay: 0.2 }}
           className="w-full lg:w-2/5 grid grid-cols-1 gap-4"
         >
-          <div className="group relative overflow-hidden [background-color:rgba(var(--bg-secondary),0.4)] border [border-color:var(--border-color)] p-8 rounded-[2.5rem] backdrop-blur-xl hover:border-indigo-500/30 transition-all duration-500"
+          {/* Animated Stats Cards */}
+          <div className="grid grid-cols-3 gap-3">
+            {stats.map((stat, index) => (
+              <motion.div
+                key={index}
+                whileInView={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, y: 20 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                whileHover={{ scale: 1.05, y: -5 }}
+                className="group relative overflow-hidden [background-color:rgba(var(--bg-secondary),0.4)] border [border-color:var(--border-color)] p-4 rounded-2xl backdrop-blur-xl hover:border-[color:var(--accent)] transition-all duration-500 text-center"
+                style={{ backgroundColor: 'color-mix(in srgb, var(--bg-secondary), transparent 60%)' }}
+              >
+                {/* Theme decoration in corner */}
+                <div className="absolute top-2 right-2">
+                  <ThemeIcon theme={theme} />
+                </div>
+
+                <stat.icon className="mx-auto text-xl [color:var(--accent)] mb-2 group-hover:scale-110 transition-transform" />
+                <p className="text-2xl font-bold [color:var(--text-primary)]">
+                  <AnimatedCounter end={stat.value} suffix={stat.suffix} />
+                </p>
+                <p className="text-[10px] [color:var(--text-secondary)] opacity-60 uppercase tracking-wide mt-1">
+                  {stat.label}
+                </p>
+                {/* Glow on hover */}
+                <div className="absolute inset-0 [background-color:var(--accent)] opacity-0 group-hover:opacity-5 transition-opacity rounded-2xl" />
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Live Status Card */}
+          <div className="group relative overflow-hidden [background-color:rgba(var(--bg-secondary),0.4)] border [border-color:var(--border-color)] p-8 rounded-[2.5rem] backdrop-blur-xl hover:border-[color:var(--accent)] transition-all duration-500"
             style={{ backgroundColor: 'color-mix(in srgb, var(--bg-secondary), transparent 60%)' }}
           >
             <div className="relative z-10 space-y-6">

@@ -2,9 +2,11 @@ import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { FaArrowUp } from "react-icons/fa"
 import Magnetic from "./Magnetic"
+import { useTheme } from "../context/ThemeContext"
 
 const ScrollToTop = () => {
   const [isVisible, setIsVisible] = useState(false)
+  const { theme } = useTheme()
 
   useEffect(() => {
     const toggleVisibility = () => {
@@ -26,6 +28,17 @@ const ScrollToTop = () => {
     })
   }
 
+  // Theme-specific glow colors
+  const getThemeGlow = () => {
+    switch (theme) {
+      case 'emerald': return 'hover:shadow-[0_0_20px_rgba(16,185,129,0.4)]'
+      case 'solar': return 'hover:shadow-[0_0_20px_rgba(255,140,0,0.4)]'
+      case 'cosmic': return 'hover:shadow-[0_0_20px_rgba(168,85,247,0.4)]'
+      case 'midnight':
+      default: return 'hover:shadow-[0_0_20px_rgba(99,102,241,0.4)]'
+    }
+  }
+
   return (
     <AnimatePresence>
       {isVisible && (
@@ -36,7 +49,7 @@ const ScrollToTop = () => {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.5, y: 20 }}
               onClick={scrollToTop}
-              className="h-14 w-14 rounded-full [background-color:var(--bg-secondary)] border [border-color:var(--border-color)] [color:var(--accent)] flex items-center justify-center shadow-2xl active:scale-95 transition-all duration-300 backdrop-blur-md cursor-none hover:border-indigo-500/50"
+              className={`h-14 w-14 rounded-full [background-color:var(--bg-secondary)] border [border-color:var(--border-color)] [color:var(--accent)] flex items-center justify-center shadow-2xl active:scale-95 transition-all duration-300 backdrop-blur-md cursor-none hover:border-[color:var(--accent)] ${getThemeGlow()}`}
               aria-label="Scroll to top"
             >
               <FaArrowUp className="text-xl" />
