@@ -196,7 +196,7 @@ const NebulaEffect = ({ reduced }) => {
 // Simple Solar Glow for mobile (no WebGL)
 const SolarGlow = () => (
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-radial from-orange-400/30 via-yellow-300/15 to-transparent blur-3xl" />
+        <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[150%] h-64 rounded-[100%] bg-gradient-radial from-orange-500/20 via-yellow-300/10 to-transparent blur-3xl opacity-50" />
     </div>
 )
 
@@ -214,14 +214,14 @@ const LightRaysWrapper = ({ reduced }) => {
 
     return (
         <LightRays
-            raysOrigin="bottom-left"
-            raysColor="#ff8c00"
-            raysSpeed={0.8}
-            lightSpread={1.2}
-            rayLength={1.5}
+            raysOrigin="top-center"
+            raysColor="#ff5e00"
+            raysSpeed={0.6}
+            lightSpread={1.5}
+            rayLength={1.8}
             pulsating={true}
             fadeDistance={1.2}
-            saturation={1.2}
+            saturation={1.3}
             followMouse={false}
             noiseAmount={0.05}
             distortion={0.02}
@@ -273,7 +273,7 @@ const Footer = () => {
                         <h3 className="text-xl md:text-2xl font-bold [color:var(--text-primary)]">
                             Tanmoy<span className="[color:var(--accent)]">.</span>
                         </h3>
-                        <p className="text-sm [color:var(--text-secondary)] leading-relaxed opacity-70">
+                        <p className={`text-sm [color:var(--text-secondary)] leading-relaxed ${isSolar ? 'opacity-90' : 'opacity-70'}`}>
                             Backend developer crafting robust APIs and scalable systems.
                         </p>
                         <div className="flex items-center gap-3 pt-2 justify-center sm:justify-start">
@@ -307,7 +307,7 @@ const Footer = () => {
                                 <a
                                     key={index}
                                     href={link.href}
-                                    className="text-sm [color:var(--text-secondary)] hover:[color:var(--accent)] transition-colors opacity-70 hover:opacity-100"
+                                    className={`text-sm [color:var(--text-secondary)] hover:[color:var(--accent)] transition-colors ${isSolar ? 'opacity-90' : 'opacity-70'} hover:opacity-100`}
                                 >
                                     {link.name}
                                 </a>
@@ -354,10 +354,10 @@ const Footer = () => {
 
             <div className="relative z-20 border-t [border-color:var(--border-color)]">
                 <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-4 md:py-5 flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-3">
-                    <p className="text-xs [color:var(--text-secondary)] opacity-50">
+                    <p className={`text-xs [color:var(--text-secondary)] ${isSolar ? 'opacity-80' : 'opacity-50'}`}>
                         © {currentYear} Tanmoy Debnath
                     </p>
-                    <p className="text-xs [color:var(--text-secondary)] opacity-50 flex items-center gap-1">
+                    <p className={`text-xs [color:var(--text-secondary)] ${isSolar ? 'opacity-80' : 'opacity-50'} flex items-center gap-1`}>
                         Made with <FaHeart className="text-red-500 text-[10px]" /> & <span className="[color:var(--accent)]">lot's of coffee</span>
                     </p>
                 </div>

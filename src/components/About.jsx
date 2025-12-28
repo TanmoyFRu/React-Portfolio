@@ -72,6 +72,7 @@ const About = () => {
       <motion.h2
         whileInView={{ opacity: 1, y: 0 }}
         initial={{ opacity: 0, y: -50 }}
+        viewport={{ once: true }}
         transition={{ duration: 1 }}
         className="my-20 text-center text-4xl lg:text-5xl font-bold tracking-tight [color:var(--text-primary)]"
       >
@@ -83,6 +84,7 @@ const About = () => {
         <motion.div
           whileInView={{ opacity: 1, x: 0 }}
           initial={{ opacity: 0, x: -50 }}
+          viewport={{ once: true }}
           transition={{ duration: 1 }}
           className="w-full lg:w-3/5 [background-color:rgba(var(--bg-secondary),0.2)] border [border-color:var(--border-color)] p-6 md:p-8 lg:p-12 rounded-2xl md:rounded-[2.5rem] backdrop-blur-md"
           style={{ backgroundColor: 'color-mix(in srgb, var(--bg-secondary), transparent 80%)' }}
@@ -93,12 +95,7 @@ const About = () => {
         </motion.div>
 
         {/* Right Column - Stats & Status */}
-        <motion.div
-          whileInView={{ opacity: 1, x: 0 }}
-          initial={{ opacity: 0, x: 50 }}
-          transition={{ duration: 1, delay: 0.2 }}
-          className="w-full lg:w-2/5 grid grid-cols-1 gap-4"
-        >
+        <div className="w-full lg:w-2/5 grid grid-cols-1 gap-4">
           {/* Animated Stats Cards */}
           <div className="grid grid-cols-3 gap-3">
             {stats.map((stat, index) => (
@@ -106,7 +103,12 @@ const About = () => {
                 key={index}
                 whileInView={{ opacity: 1, y: 0 }}
                 initial={{ opacity: 0, y: 20 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
+                viewport={{ once: true }}
+                transition={{
+                  duration: 0.8,
+                  delay: 0.1 * index + 0.2, // Stagger after the main text
+                  ease: [0.16, 1, 0.3, 1]
+                }}
                 whileHover={{ scale: 1.05, y: -5 }}
                 className="group relative overflow-hidden [background-color:rgba(var(--bg-secondary),0.4)] border [border-color:var(--border-color)] p-4 rounded-2xl backdrop-blur-xl hover:border-[color:var(--accent)] transition-all duration-500 text-center"
                 style={{ backgroundColor: 'color-mix(in srgb, var(--bg-secondary), transparent 60%)' }}
@@ -130,7 +132,12 @@ const About = () => {
           </div>
 
           {/* Live Status Card */}
-          <div className="group relative overflow-hidden [background-color:rgba(var(--bg-secondary),0.4)] border [border-color:var(--border-color)] p-8 rounded-[2.5rem] backdrop-blur-xl hover:border-[color:var(--accent)] transition-all duration-500"
+          <motion.div
+            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, y: 30 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            className="group relative overflow-hidden [background-color:rgba(var(--bg-secondary),0.4)] border [border-color:var(--border-color)] p-8 rounded-[2.5rem] backdrop-blur-xl hover:border-[color:var(--accent)] transition-all duration-500"
             style={{ backgroundColor: 'color-mix(in srgb, var(--bg-secondary), transparent 60%)' }}
           >
             <div className="relative z-10 space-y-6">
@@ -172,8 +179,8 @@ const About = () => {
             </div>
             {/* Decorative Background Glow */}
             <div className="absolute -bottom-10 -right-10 w-32 h-32 [background-color:var(--accent)] opacity-10 rounded-full blur-3xl group-hover:opacity-20 transition-all duration-500" />
-          </div>
-        </motion.div>
+          </motion.div>
+        </div>
       </div>
     </div>
   )

@@ -4,9 +4,19 @@ import { motion } from "framer-motion"
 
 const ProjectCard = ({ project }) => {
   return (
-    <div
+    <motion.div
+      whileHover={{
+        y: -10,
+        scale: 1.02,
+        rotateX: 2,
+        rotateY: -2,
+      }}
+      transition={{ type: "spring", stiffness: 300, damping: 20 }}
       className="flex-shrink-0 w-[85vw] md:w-[60vw] lg:w-[40vw] h-full p-6 md:p-8 lg:p-10 rounded-[2rem] border border-[color:var(--border-color)] backdrop-blur-xl flex flex-col gap-6 transition-all duration-500 hover:border-[color:var(--accent)] group relative pointer-events-auto"
-      style={{ backgroundColor: 'color-mix(in srgb, var(--bg-secondary), transparent 60%)' }}
+      style={{
+        backgroundColor: 'color-mix(in srgb, var(--bg-secondary), transparent 60%)',
+        perspective: '1000px' // Enable 3D perspective
+      }}
     >
       <div
         className="absolute inset-0 rounded-[2rem] opacity-10 pointer-events-none group-hover:opacity-20 transition-opacity"
@@ -52,7 +62,7 @@ const ProjectCard = ({ project }) => {
           ))}
         </div>
       </div>
-    </div>
+    </motion.div>
   )
 }
 
@@ -121,6 +131,7 @@ const Projects = () => {
       <motion.h2
         whileInView={{ opacity: 1, y: 0 }}
         initial={{ opacity: 0, y: -50 }}
+        viewport={{ once: true }}
         transition={{ duration: 1 }}
         className="mb-16 text-center text-4xl lg:text-5xl font-bold [color:var(--text-primary)]"
       >
@@ -142,7 +153,6 @@ const Projects = () => {
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
         onMouseEnter={() => setIsInteracting(true)}
-        onMouseLeave={() => setIsInteracting(false)}
       >
         {duplicatedProjects.map((project, index) => (
           <div key={index} className="flex h-[500px] md:h-[550px] lg:h-[600px]">

@@ -7,6 +7,7 @@ const Experience = () => {
             <motion.h2
                 whileInView={{ opacity: 1, y: 0 }}
                 initial={{ opacity: 0, y: -50 }}
+                viewport={{ once: true }}
                 transition={{ duration: 1 }}
                 className="my-20 text-center text-4xl lg:text-5xl font-bold tracking-tight [color:var(--text-primary)]"
             >
@@ -25,6 +26,7 @@ const Experience = () => {
                                 <motion.div
                                     initial={{ scale: 0 }}
                                     whileInView={{ scale: 1 }}
+                                    viewport={{ once: true }}
                                     whileHover={{ scale: 1.15, rotate: 5 }}
                                     className="w-[50px] h-[50px] rounded-full border-4 [border-color:var(--accent)] overflow-hidden flex items-center justify-center transition-all duration-500 hover:border-[6px] cursor-pointer"
                                     style={{ boxShadow: '0 0 15px var(--accent-glow), 0 0 3px var(--accent)' }}
@@ -41,6 +43,7 @@ const Experience = () => {
                             <motion.div
                                 whileInView={{ opacity: 1, x: 0 }}
                                 initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
+                                viewport={{ once: true }}
                                 transition={{ duration: 0.8 }}
                                 className={`w-full md:w-[42%] ${index % 2 === 0 ? 'md:mr-auto' : 'md:ml-auto'} group`}
                             >

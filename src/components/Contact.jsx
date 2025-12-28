@@ -1,10 +1,38 @@
 import { useState, useRef } from "react"
 import { CONTACT } from "../constants"
-import { motion } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion"
 import emailjs from "@emailjs/browser"
 import confetti from "canvas-confetti"
-import { FaEnvelope, FaPhoneAlt, FaMapMarkerAlt, FaPaperPlane } from "react-icons/fa"
+import { FaEnvelope, FaPhoneAlt, FaMapMarkerAlt, FaPaperPlane, FaCheck } from "react-icons/fa"
 import Magnetic from "./Magnetic"
+
+const CopyButton = ({ value, children, label }) => {
+  const [copied, setCopied] = useState(false)
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(value)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
+
+  return (
+    <div className="relative cursor-pointer" onClick={handleCopy}>
+      {children}
+      <AnimatePresence>
+        {copied && (
+          <motion.div
+            initial={{ opacity: 0, y: 10, scale: 0.8 }}
+            animate={{ opacity: 1, y: -40, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            className="absolute left-1/2 -translate-x-1/2 px-3 py-1 bg-green-500 text-white text-[10px] font-bold rounded-full flex items-center gap-2 shadow-lg z-20"
+          >
+            <FaCheck /> {label} Copied!
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  )
+}
 
 const Contact = () => {
   const formRef = useRef()
@@ -50,6 +78,7 @@ const Contact = () => {
       <motion.h2
         whileInView={{ opacity: 1, y: 0 }}
         initial={{ opacity: 0, y: -50 }}
+        viewport={{ once: true }}
         transition={{ duration: 1 }}
         className="my-20 text-center text-4xl lg:text-5xl font-bold tracking-tight [color:var(--text-primary)]"
       >
@@ -61,6 +90,7 @@ const Contact = () => {
         <motion.div
           whileInView={{ opacity: 1, x: 0 }}
           initial={{ opacity: 0, x: -50 }}
+          viewport={{ once: true }}
           transition={{ duration: 0.8 }}
           className="flex flex-col justify-center space-y-12"
         >
@@ -82,27 +112,31 @@ const Contact = () => {
               </div>
             </div>
 
-            <div className="flex items-center gap-6 group cursor-none">
-              <div className="h-12 w-12 rounded-2xl [background-color:var(--bg-secondary)] border [border-color:var(--border-color)] flex items-center justify-center [color:var(--accent)] group-hover:border-[color:var(--accent)] group-hover:bg-[color:color-mix(in_srgb,var(--accent),transparent_90%)] transition-all duration-500">
-                <FaPhoneAlt className="text-xl" />
+            <CopyButton value={CONTACT.phoneNo} label="Phone">
+              <div className="flex items-center gap-6 group cursor-none">
+                <div className="h-12 w-12 rounded-2xl [background-color:var(--bg-secondary)] border [border-color:var(--border-color)] flex items-center justify-center [color:var(--accent)] group-hover:border-[color:var(--accent)] group-hover:bg-[color:color-mix(in_srgb,var(--accent),transparent_90%)] transition-all duration-500">
+                  <FaPhoneAlt className="text-xl" />
+                </div>
+                <div>
+                  <p className="text-xs [color:var(--text-secondary)] uppercase tracking-widest font-bold opacity-60">Phone</p>
+                  <p className="[color:var(--text-primary)] font-medium group-hover:[color:var(--accent)] transition-colors">{CONTACT.phoneNo}</p>
+                </div>
               </div>
-              <div>
-                <p className="text-xs [color:var(--text-secondary)] uppercase tracking-widest font-bold opacity-60">Phone</p>
-                <p className="[color:var(--text-primary)] font-medium">{CONTACT.phoneNo}</p>
-              </div>
-            </div>
+            </CopyButton>
 
-            <div className="flex items-center gap-6 group cursor-none">
-              <div className="h-12 w-12 rounded-2xl [background-color:var(--bg-secondary)] border [border-color:var(--border-color)] flex items-center justify-center [color:var(--accent)] group-hover:border-[color:var(--accent)] group-hover:bg-[color:color-mix(in_srgb,var(--accent),transparent_90%)] transition-all duration-500">
-                <FaEnvelope className="text-xl" />
+            <CopyButton value={CONTACT.email} label="Email">
+              <div className="flex items-center gap-6 group cursor-none">
+                <div className="h-12 w-12 rounded-2xl [background-color:var(--bg-secondary)] border [border-color:var(--border-color)] flex items-center justify-center [color:var(--accent)] group-hover:border-[color:var(--accent)] group-hover:bg-[color:color-mix(in_srgb,var(--accent),transparent_90%)] transition-all duration-500">
+                  <FaEnvelope className="text-xl" />
+                </div>
+                <div>
+                  <p className="text-xs [color:var(--text-secondary)] uppercase tracking-widest font-bold opacity-60">Email</p>
+                  <p className="[color:var(--text-primary)] font-medium group-hover:[color:var(--accent)] transition-colors">
+                    {CONTACT.email}
+                  </p>
+                </div>
               </div>
-              <div>
-                <p className="text-xs [color:var(--text-secondary)] uppercase tracking-widest font-bold opacity-60">Email</p>
-                <a href={`mailto:${CONTACT.email}`} className="[color:var(--text-primary)] font-medium hover:[color:var(--accent)] transition-colors">
-                  {CONTACT.email}
-                </a>
-              </div>
-            </div>
+            </CopyButton>
           </div>
         </motion.div>
 
@@ -110,6 +144,7 @@ const Contact = () => {
         <motion.div
           whileInView={{ opacity: 1, x: 0 }}
           initial={{ opacity: 0, x: 50 }}
+          viewport={{ once: true }}
           transition={{ duration: 0.8 }}
         >
           <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">

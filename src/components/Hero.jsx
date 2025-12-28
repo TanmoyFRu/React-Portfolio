@@ -4,6 +4,7 @@ import { HERO_CONTENT } from "../constants"
 import { motion } from 'framer-motion'
 import { TypeAnimation } from 'react-type-animation'
 import { useTheme } from "../context/ThemeContext"
+import Magnetic from "./Magnetic"
 
 const containerVariants = {
   hidden: { opacity: 0, x: -100 },
@@ -290,16 +291,19 @@ const Hero = () => {
             >
               {HERO_CONTENT}
             </motion.p>
-            <motion.a
-              variants={ChildVariants}
-              href="/Resume (4).pdf"
-              target="blank"
-              rel="noopener noreferrer"
-              download
-              className="rounded-full px-8 md:px-10 py-3 md:py-4 text-sm md:text-base font-semibold transition-all duration-300 shadow-xl active:scale-95 [background-color:var(--text-primary)] [color:var(--bg-primary)] hover:[background-color:var(--accent)] hover:text-white"
-            >
-              Download Resume
-            </motion.a>
+            <motion.div variants={ChildVariants}>
+              <Magnetic>
+                <a
+                  href="/Resume (4).pdf"
+                  target="blank"
+                  rel="noopener noreferrer"
+                  download
+                  className="rounded-full px-8 md:px-10 py-3 md:py-4 text-sm md:text-base font-semibold transition-all duration-300 shadow-xl active:scale-95 [background-color:var(--text-primary)] [color:var(--bg-primary)] hover:[background-color:var(--accent)] hover:text-white inline-block"
+                >
+                  Download Resume
+                </a>
+              </Magnetic>
+            </motion.div>
           </motion.div>
         </div>
       </div>

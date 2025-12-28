@@ -8,6 +8,7 @@ const Education = () => {
             <motion.h2
                 whileInView={{ opacity: 1, y: 0 }}
                 initial={{ opacity: 0, y: -50 }}
+                viewport={{ once: true }}
                 transition={{ duration: 1 }}
                 className="my-20 text-center text-4xl lg:text-5xl font-bold tracking-tight [color:var(--text-primary)]"
             >
@@ -21,6 +22,7 @@ const Education = () => {
                             key={index}
                             whileInView={{ opacity: 1, scale: 1 }}
                             initial={{ opacity: 0, scale: 0.95 }}
+                            viewport={{ once: true }}
                             transition={{ duration: 0.6, delay: index * 0.1 }}
                             className="relative group lg:col-span-2"
                         >
@@ -80,6 +82,7 @@ const Education = () => {
                     <motion.div
                         whileInView={{ opacity: 1, x: 0 }}
                         initial={{ opacity: 0, x: 20 }}
+                        viewport={{ once: true }}
                         className="hidden lg:flex flex-col justify-center p-10 rounded-[2.5rem] border border-[color:var(--border-color)] [background-color:var(--bg-secondary)] opacity-40 hover:opacity-100 transition-opacity"
                     >
                         <h4 className="text-xl font-bold [color:var(--text-primary)] mb-4 italic font-serif">"Commitment to continuous learning and technical excellence."</h4>
