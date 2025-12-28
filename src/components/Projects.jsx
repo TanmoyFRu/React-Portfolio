@@ -1,11 +1,12 @@
-import { useRef, useState, useEffect, useCallback } from "react"
+import { useRef, useState, useEffect } from "react"
 import { PROJECTS } from "../constants"
-import { motion } from "framer-motion"
+import { motion, useMotionValue, useSpring, animate } from "framer-motion"
 
 const ProjectCard = ({ project }) => {
   return (
     <div
-      className="flex-shrink-0 w-[85vw] md:w-[50vw] lg:w-[35vw] p-6 md:p-8 lg:p-10 rounded-[2rem] md:rounded-[3rem] border border-[color:var(--border-color)] backdrop-blur-xl flex flex-col gap-6 md:gap-8 transition-all duration-500 hover:border-[color:var(--accent)] hover:shadow-2xl hover:shadow-[color:var(--accent-glow)] group relative"
+      className="flex-shrink-0 w-[85vw] md:w-[50vw] lg:w-[35vw] p-6 md:p-8 lg:p-10 rounded-[2rem] md:rounded-[3rem] border border-[color:var(--border-color)] [background-color:rgba(var(--bg-secondary),0.4)] backdrop-blur-xl flex flex-col gap-6 md:gap-8 transition-all duration-500 hover:border-[color:var(--accent)] hover:shadow-2xl hover:shadow-[color:var(--accent-glow)] group relative pointer-events-auto"
+      style={{ backgroundColor: 'color-mix(in srgb, var(--bg-secondary), transparent 60%)' }}
     >
       <div
         className="absolute inset-0 rounded-[2rem] md:rounded-[3rem] opacity-20 pointer-events-none group-hover:opacity-40 transition-opacity"
@@ -26,7 +27,6 @@ const ProjectCard = ({ project }) => {
           alt={project.title}
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
         />
-        {/* View on GitHub overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col items-center justify-end p-6 md:p-10">
           <span className="px-6 md:px-8 py-2 md:py-3 bg-white text-black rounded-full font-bold tracking-tight shadow-xl text-xs lg:text-sm">
             View on GitHub
@@ -36,12 +36,7 @@ const ProjectCard = ({ project }) => {
 
       <div className="space-y-3 md:space-y-4">
         <div className="space-y-2">
-          <a
-            href={project.github}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block"
-          >
+          <a href={project.github} target="_blank" rel="noopener noreferrer" className="inline-block">
             <h3 className="text-xl md:text-2xl lg:text-3xl font-bold [color:var(--text-primary)] tracking-tight hover:[color:var(--accent)] transition-colors duration-300">
               {project.title}
             </h3>
@@ -69,84 +64,61 @@ const ProjectCard = ({ project }) => {
 }
 
 const Projects = () => {
-  const scrollRef = useRef(null)
-  const [isDragging, setIsDragging] = useState(false)
-  const [startX, setStartX] = useState(0)
-  const [scrollLeft, setScrollLeft] = useState(0)
-  const animationRef = useRef(null)
-  const autoScrollSpeed = 0.5 // pixels per frame
+  const [isPaused, setIsPaused] = useState(false)
+  const x = useMotionValue(0)
+  const containerRef = useRef(null)
 
-  // Auto-scroll function
-  const autoScroll = useCallback(() => {
-    if (!scrollRef.current || isDragging) return
+  // Create a loop of projects (3 sets for seamlessness)
+  const duplicatedProjects = [...PROJECTS, ...PROJECTS, ...PROJECTS]
 
-    const container = scrollRef.current
-    container.scrollLeft += autoScrollSpeed
+  // Use springs for smooth momentum after drag
+  const springX = useSpring(x, {
+    stiffness: 100,
+    damping: 30,
+    mass: 1
+  })
 
-    // Reset to beginning for infinite loop
-    const maxScroll = container.scrollWidth / 3
-    if (container.scrollLeft >= maxScroll) {
-      container.scrollLeft = 0
-    }
-
-    animationRef.current = requestAnimationFrame(autoScroll)
-  }, [isDragging])
-
-  // Start/stop auto-scroll based on dragging state
   useEffect(() => {
-    if (!isDragging) {
-      animationRef.current = requestAnimationFrame(autoScroll)
-    }
-    return () => {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current)
+    let controls;
+
+    const startAnimation = () => {
+      // Calculate total width of one set of projects
+      // We assume each project + gap is roughly consistent
+      // The total scrollable distance for one set:
+      const totalWidth = containerRef.current?.scrollWidth / 3 || 0;
+
+      const currentX = x.get();
+      // If we've scrolled past one set, reset to start of first set
+      if (currentX <= -totalWidth) {
+        x.set(0);
       }
+
+      controls = animate(x, -totalWidth, {
+        duration: 40,
+        ease: "linear",
+        repeat: Infinity,
+        onUpdate: (latest) => {
+          if (latest <= -totalWidth) {
+            x.set(0);
+          }
+        }
+      });
     }
-  }, [isDragging, autoScroll])
 
-  // Mouse drag handlers
-  const handleMouseDown = (e) => {
-    setIsDragging(true)
-    setStartX(e.pageX - scrollRef.current.offsetLeft)
-    setScrollLeft(scrollRef.current.scrollLeft)
-  }
+    if (!isPaused) {
+      startAnimation();
+    } else {
+      controls?.stop();
+    }
 
-  const handleMouseMove = (e) => {
-    if (!isDragging) return
-    e.preventDefault()
-    const x = e.pageX - scrollRef.current.offsetLeft
-    const walk = (x - startX) * 1.5 // Scroll speed multiplier
-    scrollRef.current.scrollLeft = scrollLeft - walk
-  }
+    return () => controls?.stop();
+  }, [isPaused, x]);
 
-  const handleMouseUp = () => {
-    setIsDragging(false)
-  }
-
-  const handleMouseLeave = () => {
-    setIsDragging(false)
-  }
-
-  // Touch handlers for mobile
-  const handleTouchStart = (e) => {
-    setIsDragging(true)
-    setStartX(e.touches[0].pageX - scrollRef.current.offsetLeft)
-    setScrollLeft(scrollRef.current.scrollLeft)
-  }
-
-  const handleTouchMove = (e) => {
-    if (!isDragging) return
-    const x = e.touches[0].pageX - scrollRef.current.offsetLeft
-    const walk = (x - startX) * 1.5
-    scrollRef.current.scrollLeft = scrollLeft - walk
-  }
-
-  const handleTouchEnd = () => {
-    setIsDragging(false)
-  }
+  const handleDragStart = () => setIsPaused(true);
+  const handleDragEnd = () => setIsPaused(false);
 
   return (
-    <div className="pb-16 md:pb-24 overflow-hidden">
+    <div className="pb-16 md:pb-24 overflow-hidden lg:cursor-none">
       <motion.h2
         whileInView={{ opacity: 1, y: 0 }}
         initial={{ opacity: 0, y: -50 }}
@@ -156,31 +128,26 @@ const Projects = () => {
         Personal <span className="[color:var(--accent)]">Projects</span>
       </motion.h2>
 
-      <div
-        ref={scrollRef}
-        className={`flex gap-8 md:gap-16 px-6 md:px-12 overflow-x-auto scrollbar-hide py-6 md:py-10 ${isDragging ? 'cursor-grabbing' : 'cursor-grab'
-          }`}
-        style={{
-          scrollBehavior: isDragging ? 'auto' : 'smooth',
-          WebkitOverflowScrolling: 'touch'
-        }}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        onMouseLeave={handleMouseLeave}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-      >
-        {/* Triple the projects for seamless loop */}
-        {[...PROJECTS, ...PROJECTS, ...PROJECTS].map((project, index) => (
-          <ProjectCard key={index} project={project} />
-        ))}
+      <div className="relative group">
+        <motion.div
+          ref={containerRef}
+          className="flex gap-8 md:gap-16 px-6 md:px-12 py-6 md:py-10 cursor-grab active:cursor-grabbing touch-pan-y"
+          drag="x"
+          dragConstraints={{ left: -10000, right: 10000 }} // Allow large drags
+          style={{ x: springX }}
+          onDragStart={handleDragStart}
+          onDragEnd={handleDragEnd}
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => !isPaused && setIsPaused(false)}
+        >
+          {duplicatedProjects.map((project, index) => (
+            <ProjectCard key={index} project={project} />
+          ))}
+        </motion.div>
       </div>
 
-      {/* Scroll hint */}
       <p className="text-center text-xs [color:var(--text-secondary)] opacity-50 mt-4">
-        Drag to explore
+        Drag or swipe to explore • Auto-scroll resumes on release
       </p>
     </div>
   )
