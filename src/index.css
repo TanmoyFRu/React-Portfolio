@@ -20,16 +20,16 @@
 }
 
 [data-theme="solar"] {
-  /* Solar Theme (Refined Light) */
-  --bg-primary: #ffffff;
-  --bg-secondary: #f8fafc;
-  --text-primary: #0f172a;
-  --text-secondary: #475569;
-  --accent: #4f46e5;
-  --accent-glow: rgba(79, 70, 229, 0.1);
-  --border-color: rgba(226, 232, 240, 1);
-  --selection-bg: rgba(79, 70, 229, 0.2);
-  --selection-text: #1e1b4b;
+  /* Solar Theme (Warm Light) */
+  --bg-primary: #fffbeb;
+  --bg-secondary: #fef3c7;
+  --text-primary: #1c1917;
+  --text-secondary: #78716c;
+  --accent: #f59e0b;
+  --accent-glow: rgba(245, 158, 11, 0.2);
+  --border-color: rgba(217, 119, 6, 0.2);
+  --selection-bg: rgba(245, 158, 11, 0.3);
+  --selection-text: #451a03;
 }
 
 [data-theme="cosmic"] {

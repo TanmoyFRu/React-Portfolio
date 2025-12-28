@@ -7,10 +7,14 @@ const SplashScreen = ({ onComplete }) => {
     const { theme } = useTheme()
 
     useEffect(() => {
+        // Shorter on mobile for faster load feel
+        const isMobile = window.innerWidth < 768
+        const duration = isMobile ? 1800 : 2500
+
         const timer = setTimeout(() => {
             setIsVisible(false)
-            setTimeout(onComplete, 500) // Wait for exit animation
-        }, 2500) // Show for 2.5 seconds
+            setTimeout(onComplete, 400)
+        }, duration)
 
         return () => clearTimeout(timer)
     }, [onComplete])
@@ -32,15 +36,13 @@ const SplashScreen = ({ onComplete }) => {
                 <motion.div
                     initial={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={{ duration: 0.5 }}
+                    transition={{ duration: 0.4 }}
                     className="fixed inset-0 z-[9999] flex flex-col items-center justify-center [background-color:var(--bg-primary)]"
                 >
-                    {/* Background gradient */}
+                    {/* Background gradient - Simplified for performance */}
                     <div className="absolute inset-0 overflow-hidden">
-                        <motion.div
-                            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full [background-color:var(--accent)] opacity-10 blur-[120px]"
-                            animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.15, 0.1] }}
-                            transition={{ duration: 3, repeat: Infinity }}
+                        <div
+                            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] md:w-[600px] md:h-[600px] rounded-full [background-color:var(--accent)] opacity-10 blur-[80px] md:blur-[120px]"
                         />
                     </div>
 
@@ -48,22 +50,22 @@ const SplashScreen = ({ onComplete }) => {
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: 0.2 }}
-                        className="relative z-10 text-center"
+                        transition={{ duration: 0.6, delay: 0.1 }}
+                        className="relative z-10 text-center px-4"
                     >
                         {/* Main Name */}
                         <motion.h1
-                            className="text-5xl md:text-7xl font-black [color:var(--text-primary)] tracking-tighter"
+                            className="text-4xl sm:text-5xl md:text-7xl font-black [color:var(--text-primary)] tracking-tighter"
                             initial={{ opacity: 0, scale: 0.9 }}
                             animate={{ opacity: 1, scale: 1 }}
-                            transition={{ duration: 0.5, delay: 0.3 }}
+                            transition={{ duration: 0.4, delay: 0.2 }}
                         >
                             Tanmoy
                             <motion.span
                                 className="[color:var(--accent)]"
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
-                                transition={{ duration: 0.3, delay: 0.8 }}
+                                transition={{ duration: 0.2, delay: 0.5 }}
                             >
                                 .
                             </motion.span>
@@ -71,10 +73,10 @@ const SplashScreen = ({ onComplete }) => {
 
                         {/* Tagline */}
                         <motion.p
-                            className="mt-4 text-sm md:text-base [color:var(--text-secondary)] tracking-[0.3em] uppercase font-light"
+                            className="mt-3 md:mt-4 text-xs sm:text-sm md:text-base [color:var(--text-secondary)] tracking-[0.2em] md:tracking-[0.3em] uppercase font-light"
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 0.6 }}
-                            transition={{ duration: 0.5, delay: 1 }}
+                            transition={{ duration: 0.4, delay: 0.6 }}
                         >
                             Backend Developer
                         </motion.p>
@@ -82,43 +84,43 @@ const SplashScreen = ({ onComplete }) => {
 
                     {/* Loading Bar */}
                     <motion.div
-                        className="absolute bottom-20 left-1/2 -translate-x-1/2 w-48 h-1 rounded-full overflow-hidden [background-color:var(--bg-secondary)]"
+                        className="absolute bottom-16 md:bottom-20 left-1/2 -translate-x-1/2 w-32 sm:w-40 md:w-48 h-1 rounded-full overflow-hidden [background-color:var(--bg-secondary)]"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        transition={{ delay: 1.2 }}
+                        transition={{ delay: 0.7 }}
                     >
                         <motion.div
                             className={`h-full bg-gradient-to-r ${getAccentGradient()} rounded-full`}
                             initial={{ width: "0%" }}
                             animate={{ width: "100%" }}
-                            transition={{ duration: 1.3, delay: 1.2, ease: "easeOut" }}
+                            transition={{ duration: 1, delay: 0.7, ease: "easeOut" }}
                         />
                     </motion.div>
 
-                    {/* Decorative corners */}
+                    {/* Decorative corners - Hidden on mobile */}
                     <motion.div
-                        className="absolute top-8 left-8 w-12 h-12 border-l-2 border-t-2 [border-color:var(--accent)] opacity-30"
+                        className="absolute top-4 left-4 md:top-8 md:left-8 w-8 h-8 md:w-12 md:h-12 border-l-2 border-t-2 [border-color:var(--accent)] opacity-30 hidden sm:block"
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 0.3, scale: 1 }}
+                        transition={{ delay: 0.3 }}
+                    />
+                    <motion.div
+                        className="absolute top-4 right-4 md:top-8 md:right-8 w-8 h-8 md:w-12 md:h-12 border-r-2 border-t-2 [border-color:var(--accent)] opacity-30 hidden sm:block"
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 0.3, scale: 1 }}
+                        transition={{ delay: 0.4 }}
+                    />
+                    <motion.div
+                        className="absolute bottom-4 left-4 md:bottom-8 md:left-8 w-8 h-8 md:w-12 md:h-12 border-l-2 border-b-2 [border-color:var(--accent)] opacity-30 hidden sm:block"
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 0.3, scale: 1 }}
                         transition={{ delay: 0.5 }}
                     />
                     <motion.div
-                        className="absolute top-8 right-8 w-12 h-12 border-r-2 border-t-2 [border-color:var(--accent)] opacity-30"
+                        className="absolute bottom-4 right-4 md:bottom-8 md:right-8 w-8 h-8 md:w-12 md:h-12 border-r-2 border-b-2 [border-color:var(--accent)] opacity-30 hidden sm:block"
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 0.3, scale: 1 }}
                         transition={{ delay: 0.6 }}
-                    />
-                    <motion.div
-                        className="absolute bottom-8 left-8 w-12 h-12 border-l-2 border-b-2 [border-color:var(--accent)] opacity-30"
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 0.3, scale: 1 }}
-                        transition={{ delay: 0.7 }}
-                    />
-                    <motion.div
-                        className="absolute bottom-8 right-8 w-12 h-12 border-r-2 border-b-2 [border-color:var(--accent)] opacity-30"
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 0.3, scale: 1 }}
-                        transition={{ delay: 0.8 }}
                     />
                 </motion.div>
             )}

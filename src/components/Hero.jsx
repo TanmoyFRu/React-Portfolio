@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react"
 import profilePicture from "../assets/TanmoyDebnathProfileNew.png"
 import { HERO_CONTENT } from "../constants"
 import { motion } from 'framer-motion'
@@ -20,17 +21,82 @@ const ChildVariants = {
   visible: { opacity: 1, x: 0, transition: { duration: 0.5 } }
 }
 
-// Theme-specific decorative elements
-const ThemeDecoration = ({ theme }) => {
+// Hook to detect if user prefers reduced motion or is on mobile
+const useReducedMotion = () => {
+  const [reducedMotion, setReducedMotion] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    // Check for reduced motion preference
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
+    setReducedMotion(mediaQuery.matches)
+
+    const handleChange = (e) => setReducedMotion(e.matches)
+    mediaQuery.addEventListener('change', handleChange)
+
+    // Check for mobile
+    setIsMobile(window.innerWidth < 768)
+    const handleResize = () => setIsMobile(window.innerWidth < 768)
+    window.addEventListener('resize', handleResize)
+
+    return () => {
+      mediaQuery.removeEventListener('change', handleChange)
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [])
+
+  return reducedMotion || isMobile
+}
+
+// Theme-specific decorative elements - optimized for performance
+const ThemeDecoration = ({ theme, isLowPerf }) => {
+  // Reduce elements on mobile/low-perf devices
+  const elementCount = isLowPerf ? 5 : 15
+  const particleCount = isLowPerf ? 4 : 10
+  const starCount = isLowPerf ? 8 : 25
+  const dotCount = isLowPerf ? 6 : 18
+
+  if (isLowPerf) {
+    // Simplified static decorations for mobile/low-perf
+    switch (theme) {
+      case 'emerald':
+        return (
+          <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-20">
+            <div className="absolute left-[10%] top-0 w-px h-full bg-gradient-to-b from-transparent via-green-500/30 to-transparent" />
+            <div className="absolute left-[90%] top-0 w-px h-full bg-gradient-to-b from-transparent via-green-500/30 to-transparent" />
+          </div>
+        )
+      case 'solar':
+        return (
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <div className="absolute -top-20 -right-20 w-64 h-64 md:w-80 md:h-80 rounded-full bg-gradient-radial from-orange-400/20 via-yellow-300/10 to-transparent blur-3xl" />
+          </div>
+        )
+      case 'cosmic':
+        return (
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <div className="absolute top-1/4 left-1/4 w-48 h-48 md:w-64 md:h-64 rounded-full bg-purple-500/10 blur-[60px]" />
+          </div>
+        )
+      case 'midnight':
+      default:
+        return (
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 md:w-72 md:h-72 rounded-full bg-indigo-500/10 blur-[80px]" />
+          </div>
+        )
+    }
+  }
+
+  // Full animations for desktop
   switch (theme) {
     case 'emerald':
       return (
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {/* Floating code symbols */}
-          {[...Array(15)].map((_, i) => (
+          {[...Array(elementCount)].map((_, i) => (
             <motion.div
               key={i}
-              className="absolute text-green-500/60 font-mono text-sm md:text-lg font-bold"
+              className="absolute text-green-500/60 font-mono text-sm md:text-lg font-bold hidden md:block"
               style={{
                 left: `${5 + (i * 7) % 90}%`,
                 top: `${10 + (i * 13) % 80}%`
@@ -38,14 +104,12 @@ const ThemeDecoration = ({ theme }) => {
               animate={{
                 opacity: [0.3, 0.7, 0.3],
                 y: [0, -10, 0],
-                rotate: [0, 5, 0]
               }}
               transition={{ duration: 3 + i * 0.2, repeat: Infinity, delay: i * 0.15 }}
             >
               {['</', '{}', '()', '=>', '[]', '/>', 'fn', '&&', '||', '::', '++', '--', '/*', '*/', '//'][i]}
             </motion.div>
           ))}
-          {/* Matrix-like vertical line */}
           <motion.div
             className="absolute left-[10%] top-0 w-px h-full bg-gradient-to-b from-transparent via-green-500/20 to-transparent"
             animate={{ opacity: [0.2, 0.5, 0.2] }}
@@ -61,17 +125,15 @@ const ThemeDecoration = ({ theme }) => {
     case 'solar':
       return (
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {/* Large sun glow */}
           <motion.div
-            className="absolute -top-40 -right-40 w-[500px] h-[500px] rounded-full bg-gradient-radial from-orange-400/25 via-yellow-300/15 to-transparent blur-3xl"
+            className="absolute -top-20 md:-top-40 -right-20 md:-right-40 w-64 h-64 md:w-[500px] md:h-[500px] rounded-full bg-gradient-radial from-orange-400/25 via-yellow-300/15 to-transparent blur-3xl"
             animate={{ scale: [1, 1.15, 1], opacity: [0.4, 0.6, 0.4] }}
             transition={{ duration: 5, repeat: Infinity }}
           />
-          {/* Sun rays */}
           {[...Array(8)].map((_, i) => (
             <motion.div
               key={i}
-              className="absolute top-0 right-0 origin-top-right"
+              className="absolute top-0 right-0 origin-top-right hidden md:block"
               style={{
                 width: '2px',
                 height: '150px',
@@ -82,11 +144,10 @@ const ThemeDecoration = ({ theme }) => {
               transition={{ duration: 2 + i * 0.3, repeat: Infinity, delay: i * 0.2 }}
             />
           ))}
-          {/* Floating particles */}
-          {[...Array(10)].map((_, i) => (
+          {[...Array(particleCount)].map((_, i) => (
             <motion.div
               key={`p-${i}`}
-              className="absolute w-1.5 h-1.5 rounded-full bg-orange-400/50"
+              className="absolute w-1 h-1 md:w-1.5 md:h-1.5 rounded-full bg-orange-400/50 hidden sm:block"
               style={{ left: `${20 + i * 8}%`, top: `${15 + (i * 9) % 60}%` }}
               animate={{ y: [0, -15, 0], opacity: [0.3, 0.7, 0.3] }}
               transition={{ duration: 3 + i * 0.4, repeat: Infinity, delay: i * 0.3 }}
@@ -97,14 +158,12 @@ const ThemeDecoration = ({ theme }) => {
     case 'cosmic':
       return (
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {/* Nebula glow */}
           <motion.div
-            className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-purple-500/10 blur-[80px]"
+            className="absolute top-1/4 left-1/4 w-48 h-48 md:w-96 md:h-96 rounded-full bg-purple-500/10 blur-[80px]"
             animate={{ scale: [1, 1.2, 1], opacity: [0.2, 0.4, 0.2] }}
             transition={{ duration: 6, repeat: Infinity }}
           />
-          {/* Twinkling stars */}
-          {[...Array(25)].map((_, i) => (
+          {[...Array(starCount)].map((_, i) => (
             <motion.div
               key={i}
               className="absolute rounded-full bg-purple-300"
@@ -117,14 +176,12 @@ const ThemeDecoration = ({ theme }) => {
               animate={{
                 opacity: [0.2, 1, 0.2],
                 scale: [1, 1.5, 1],
-                boxShadow: ['0 0 0px rgba(168,85,247,0)', '0 0 8px rgba(168,85,247,0.8)', '0 0 0px rgba(168,85,247,0)']
               }}
               transition={{ duration: 2 + (i % 4) * 0.5, repeat: Infinity, delay: i * 0.1 }}
             />
           ))}
-          {/* Shooting star */}
           <motion.div
-            className="absolute w-20 h-0.5 bg-gradient-to-r from-purple-400 to-transparent rounded-full"
+            className="absolute w-16 md:w-20 h-0.5 bg-gradient-to-r from-purple-400 to-transparent rounded-full hidden md:block"
             initial={{ left: '80%', top: '10%', rotate: 45 }}
             animate={{ left: ['80%', '20%'], top: ['10%', '50%'], opacity: [0, 1, 0] }}
             transition={{ duration: 3, repeat: Infinity, repeatDelay: 5 }}
@@ -135,17 +192,15 @@ const ThemeDecoration = ({ theme }) => {
     default:
       return (
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {/* Ambient glow */}
           <motion.div
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full bg-indigo-500/10 blur-[100px]"
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 md:w-[400px] md:h-[400px] rounded-full bg-indigo-500/10 blur-[100px]"
             animate={{ scale: [1, 1.1, 1], opacity: [0.15, 0.25, 0.15] }}
             transition={{ duration: 5, repeat: Infinity }}
           />
-          {/* Floating dots */}
-          {[...Array(18)].map((_, i) => (
+          {[...Array(dotCount)].map((_, i) => (
             <motion.div
               key={i}
-              className="absolute rounded-full bg-indigo-400"
+              className="absolute rounded-full bg-indigo-400 hidden sm:block"
               style={{
                 left: `${(i * 11) % 90 + 5}%`,
                 top: `${(i * 17) % 85 + 5}%`,
@@ -159,8 +214,7 @@ const ThemeDecoration = ({ theme }) => {
               transition={{ duration: 4 + (i % 3), repeat: Infinity, delay: i * 0.2 }}
             />
           ))}
-          {/* Subtle grid lines */}
-          <div className="absolute inset-0 opacity-[0.03]" style={{
+          <div className="absolute inset-0 opacity-[0.02] hidden md:block" style={{
             backgroundImage: 'linear-gradient(to right, var(--accent) 1px, transparent 1px), linear-gradient(to bottom, var(--accent) 1px, transparent 1px)',
             backgroundSize: '60px 60px'
           }} />
@@ -171,10 +225,11 @@ const ThemeDecoration = ({ theme }) => {
 
 const Hero = () => {
   const { theme } = useTheme()
+  const isLowPerf = useReducedMotion()
 
   return (
     <div className="pb-4 lg:mb-36 relative">
-      <ThemeDecoration theme={theme} />
+      <ThemeDecoration theme={theme} isLowPerf={isLowPerf} />
 
       <div className="flex flex-wrap lg:flex-row-reverse items-center justify-center relative z-10">
         <div className="w-full lg:w-1/2">
@@ -191,9 +246,7 @@ const Hero = () => {
               <motion.img
                 src={profilePicture}
                 alt="Tanmoy Debnath"
-                className="relative border border-stone-800/10 rounded-3xl grayscale-[0.2] brightness-[0.9] contrast-[1.1] sepia-[0.1] hover:grayscale-0 hover:brightness-100 transition-all duration-700 shadow-2xl"
-                width={500}
-                height={500}
+                className="relative border border-stone-800/10 rounded-3xl grayscale-[0.2] brightness-[0.9] contrast-[1.1] sepia-[0.1] hover:grayscale-0 hover:brightness-100 transition-all duration-700 shadow-2xl w-[300px] md:w-[400px] lg:w-[500px]"
                 initial={{ x: 100, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ duration: 1, delay: 1.5 }}
@@ -205,14 +258,14 @@ const Hero = () => {
           </div>
         </div>
         <div className="w-full lg:w-1/2">
-          <motion.div initial="hidden" animate="visible" variants={containerVariants} className="flex flex-col items-center lg:items-start lg:pl-10">
+          <motion.div initial="hidden" animate="visible" variants={containerVariants} className="flex flex-col items-center lg:items-start lg:pl-10 mt-8 lg:mt-0">
             <motion.h2
               variants={ChildVariants}
-              className="pb-4 text-3xl sm:text-4xl md:text-5xl tracking-tight lg:text-7xl font-bold [color:var(--text-primary)]"
+              className="pb-4 text-3xl sm:text-4xl md:text-5xl tracking-tight lg:text-7xl font-bold [color:var(--text-primary)] text-center lg:text-left"
             >
               Tanmoy Debnath
             </motion.h2>
-            <motion.div variants={ChildVariants} className="h-[60px] lg:h-[80px]">
+            <motion.div variants={ChildVariants} className="h-[50px] md:h-[60px] lg:h-[80px]">
               <TypeAnimation
                 sequence={[
                   'Full Stack Developer',
@@ -227,13 +280,13 @@ const Hero = () => {
                 wrapper="span"
                 speed={50}
                 repeat={Infinity}
-                className="block bg-gradient-to-r from-stone-300 to-stone-600 bg-clip-text text-3xl lg:text-4xl tracking-tight text-transparent font-medium"
+                className="block bg-gradient-to-r from-stone-300 to-stone-600 bg-clip-text text-2xl md:text-3xl lg:text-4xl tracking-tight text-transparent font-medium"
                 style={{ backgroundImage: 'linear-gradient(to right, var(--text-primary), var(--text-secondary))' }}
               />
             </motion.div>
             <motion.p
               variants={ChildVariants}
-              className="my-4 max-w-2xl py-2 text-xl leading-relaxed tracking-tight [color:var(--text-secondary)] font-light text-center lg:text-left"
+              className="my-4 max-w-2xl py-2 text-base md:text-lg lg:text-xl leading-relaxed tracking-tight [color:var(--text-secondary)] font-light text-center lg:text-left px-4 lg:px-0"
             >
               {HERO_CONTENT}
             </motion.p>
@@ -243,7 +296,7 @@ const Hero = () => {
               target="blank"
               rel="noopener noreferrer"
               download
-              className="rounded-full px-10 py-4 text-base font-semibold transition-all duration-300 shadow-xl active:scale-95 [background-color:var(--text-primary)] [color:var(--bg-primary)] hover:[background-color:var(--accent)] hover:text-white"
+              className="rounded-full px-8 md:px-10 py-3 md:py-4 text-sm md:text-base font-semibold transition-all duration-300 shadow-xl active:scale-95 [background-color:var(--text-primary)] [color:var(--bg-primary)] hover:[background-color:var(--accent)] hover:text-white"
             >
               Download Resume
             </motion.a>

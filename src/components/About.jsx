@@ -78,16 +78,16 @@ const About = () => {
         About <span className="[color:var(--accent)]">Me</span>
       </motion.h2>
 
-      <div className="flex flex-wrap lg:flex-nowrap items-start justify-center gap-8 max-w-6xl mx-auto px-4">
+      <div className="flex flex-wrap lg:flex-nowrap items-start justify-center gap-6 md:gap-8 max-w-6xl mx-auto px-4">
         {/* Main About Text */}
         <motion.div
           whileInView={{ opacity: 1, x: 0 }}
           initial={{ opacity: 0, x: -50 }}
           transition={{ duration: 1 }}
-          className="w-full lg:w-3/5 [background-color:rgba(var(--bg-secondary),0.2)] border [border-color:var(--border-color)] p-8 lg:p-12 rounded-[2.5rem] backdrop-blur-md"
+          className="w-full lg:w-3/5 [background-color:rgba(var(--bg-secondary),0.2)] border [border-color:var(--border-color)] p-6 md:p-8 lg:p-12 rounded-2xl md:rounded-[2.5rem] backdrop-blur-md"
           style={{ backgroundColor: 'color-mix(in srgb, var(--bg-secondary), transparent 80%)' }}
         >
-          <p className="text-xl lg:text-2xl leading-relaxed tracking-tight [color:var(--text-secondary)] font-light text-center lg:text-left">
+          <p className="text-base md:text-xl lg:text-2xl leading-relaxed tracking-tight [color:var(--text-secondary)] font-light text-center lg:text-left">
             {ABOUT_TEXT}
           </p>
         </motion.div>

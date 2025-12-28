@@ -34,7 +34,7 @@ const Contact = () => {
           particleCount: 150,
           spread: 70,
           origin: { y: 0.6 },
-          colors: ['#6366f1', '#a855f7', '#ffffff']
+          colors: ['#ffffff', '#fbbf24', '#34d399', '#818cf8', '#f472b6']
         })
         formRef.current.reset()
         setTimeout(() => setIsSuccess(false), 5000)

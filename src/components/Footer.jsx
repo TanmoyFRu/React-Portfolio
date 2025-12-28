@@ -1,15 +1,56 @@
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import { motion } from "framer-motion"
 import { FaGithub, FaLinkedin, FaEnvelope, FaHeart, FaCode } from "react-icons/fa"
 import { SiReact, SiTailwindcss } from "react-icons/si"
 import { useTheme } from "../context/ThemeContext"
-import LightRays from "./LightRays"
 
-// Matrix Rain Effect - Emerald Theme
-const MatrixRain = () => {
+// Hook to detect if user prefers reduced motion or is on mobile
+const useReducedMotion = () => {
+    const [shouldReduce, setShouldReduce] = useState(false)
+
+    useEffect(() => {
+        const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
+        const isMobile = window.innerWidth < 768
+        setShouldReduce(mediaQuery.matches || isMobile)
+
+        const handleChange = () => {
+            const isMobileNow = window.innerWidth < 768
+            setShouldReduce(mediaQuery.matches || isMobileNow)
+        }
+
+        mediaQuery.addEventListener('change', handleChange)
+        window.addEventListener('resize', handleChange)
+
+        return () => {
+            mediaQuery.removeEventListener('change', handleChange)
+            window.removeEventListener('resize', handleChange)
+        }
+    }, [])
+
+    return shouldReduce
+}
+
+// Simplified static effects for mobile/low-perf
+const SimpleGradient = ({ theme }) => {
+    const gradients = {
+        emerald: 'from-green-500/10 via-transparent to-transparent',
+        solar: 'from-orange-400/15 via-yellow-300/5 to-transparent',
+        cosmic: 'from-purple-500/10 via-pink-500/5 to-transparent',
+        midnight: 'from-indigo-500/10 via-blue-500/5 to-transparent'
+    }
+
+    return (
+        <div className={`absolute inset-0 bg-gradient-to-tr ${gradients[theme] || gradients.midnight} pointer-events-none`} />
+    )
+}
+
+// Matrix Rain Effect - Emerald Theme (Optimized)
+const MatrixRain = ({ reduced }) => {
     const canvasRef = useRef(null)
 
     useEffect(() => {
+        if (reduced) return
+
         const canvas = canvasRef.current
         if (!canvas) return
         const ctx = canvas.getContext('2d')
@@ -20,7 +61,7 @@ const MatrixRain = () => {
         }
         resizeCanvas()
 
-        const chars = 'アイウエオカキクケコ0123456789<>/{}[]()'
+        const chars = 'アイウエオ0123456789<>/{}[]()'
         const charArray = chars.split('')
         const fontSize = 14
         const columns = Math.floor(canvas.width / fontSize)
@@ -40,19 +81,22 @@ const MatrixRain = () => {
             }
         }
 
-        const interval = setInterval(draw, 50)
+        const interval = setInterval(draw, 60) // Slower interval
         window.addEventListener('resize', resizeCanvas)
         return () => { clearInterval(interval); window.removeEventListener('resize', resizeCanvas) }
-    }, [])
+    }, [reduced])
 
-    return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full opacity-20 pointer-events-none" />
+    if (reduced) return <SimpleGradient theme="emerald" />
+    return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full opacity-15 pointer-events-none" />
 }
 
-// Floating Stars Effect - Midnight Theme
-const StarField = () => {
+// Floating Stars Effect - Midnight Theme (Optimized)
+const StarField = ({ reduced }) => {
     const canvasRef = useRef(null)
 
     useEffect(() => {
+        if (reduced) return
+
         const canvas = canvasRef.current
         if (!canvas) return
         const ctx = canvas.getContext('2d')
@@ -63,11 +107,12 @@ const StarField = () => {
         }
         resizeCanvas()
 
-        const stars = Array(100).fill(0).map(() => ({
+        // Reduced star count
+        const stars = Array(50).fill(0).map(() => ({
             x: Math.random() * canvas.width,
             y: Math.random() * canvas.height,
             size: Math.random() * 2 + 0.5,
-            speed: Math.random() * 0.5 + 0.1,
+            speed: Math.random() * 0.3 + 0.1,
             opacity: Math.random() * 0.5 + 0.3
         }))
 
@@ -82,24 +127,26 @@ const StarField = () => {
                 ctx.fill()
 
                 star.y -= star.speed
-                star.opacity = 0.3 + Math.sin(Date.now() * 0.003 + star.x) * 0.3
                 if (star.y < 0) { star.y = canvas.height; star.x = Math.random() * canvas.width }
             })
         }
 
-        const interval = setInterval(draw, 30)
+        const interval = setInterval(draw, 50)
         window.addEventListener('resize', resizeCanvas)
         return () => { clearInterval(interval); window.removeEventListener('resize', resizeCanvas) }
-    }, [])
+    }, [reduced])
 
-    return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full opacity-40 pointer-events-none" />
+    if (reduced) return <SimpleGradient theme="midnight" />
+    return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full opacity-30 pointer-events-none" />
 }
 
-// Nebula Effect - Cosmic Theme
-const NebulaEffect = () => {
+// Nebula Effect - Cosmic Theme (Optimized)
+const NebulaEffect = ({ reduced }) => {
     const canvasRef = useRef(null)
 
     useEffect(() => {
+        if (reduced) return
+
         const canvas = canvasRef.current
         if (!canvas) return
         const ctx = canvas.getContext('2d')
@@ -110,12 +157,13 @@ const NebulaEffect = () => {
         }
         resizeCanvas()
 
-        const particles = Array(60).fill(0).map(() => ({
+        // Reduced particle count
+        const particles = Array(30).fill(0).map(() => ({
             x: Math.random() * canvas.width,
             y: Math.random() * canvas.height,
             size: Math.random() * 3 + 1,
-            speedX: (Math.random() - 0.5) * 0.3,
-            speedY: (Math.random() - 0.5) * 0.3,
+            speedX: (Math.random() - 0.5) * 0.2,
+            speedY: (Math.random() - 0.5) * 0.2,
             hue: Math.random() * 60 + 260
         }))
 
@@ -126,12 +174,7 @@ const NebulaEffect = () => {
             particles.forEach(p => {
                 ctx.beginPath()
                 ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2)
-                ctx.fillStyle = `hsla(${p.hue}, 70%, 60%, 0.6)`
-                ctx.fill()
-
-                ctx.beginPath()
-                ctx.arc(p.x, p.y, p.size * 3, 0, Math.PI * 2)
-                ctx.fillStyle = `hsla(${p.hue}, 70%, 60%, 0.1)`
+                ctx.fillStyle = `hsla(${p.hue}, 70%, 60%, 0.5)`
                 ctx.fill()
 
                 p.x += p.speedX
@@ -141,18 +184,56 @@ const NebulaEffect = () => {
             })
         }
 
-        const interval = setInterval(draw, 30)
+        const interval = setInterval(draw, 50)
         window.addEventListener('resize', resizeCanvas)
         return () => { clearInterval(interval); window.removeEventListener('resize', resizeCanvas) }
-    }, [])
+    }, [reduced])
 
-    return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full opacity-30 pointer-events-none" />
+    if (reduced) return <SimpleGradient theme="cosmic" />
+    return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full opacity-25 pointer-events-none" />
+}
+
+// Simple Solar Glow for mobile (no WebGL)
+const SolarGlow = () => (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-radial from-orange-400/30 via-yellow-300/15 to-transparent blur-3xl" />
+    </div>
+)
+
+// Dynamic import for LightRays (WebGL) - only on desktop
+const LightRaysWrapper = ({ reduced }) => {
+    const [LightRays, setLightRays] = useState(null)
+
+    useEffect(() => {
+        if (!reduced) {
+            import('./LightRays').then(module => setLightRays(() => module.default))
+        }
+    }, [reduced])
+
+    if (reduced || !LightRays) return <SolarGlow />
+
+    return (
+        <LightRays
+            raysOrigin="bottom-left"
+            raysColor="#ff8c00"
+            raysSpeed={0.8}
+            lightSpread={1.2}
+            rayLength={1.5}
+            pulsating={true}
+            fadeDistance={1.2}
+            saturation={1.2}
+            followMouse={false}
+            noiseAmount={0.05}
+            distortion={0.02}
+        />
+    )
 }
 
 const Footer = () => {
     const { theme } = useTheme()
     const currentYear = new Date().getFullYear()
     const isSolar = theme === 'solar'
+    const reduced = useReducedMotion()
 
     const socialLinks = [
         { icon: FaGithub, href: "https://github.com/TanmoyFRu", label: "GitHub" },
@@ -169,25 +250,11 @@ const Footer = () => {
 
     const renderThemeEffect = () => {
         switch (theme) {
-            case 'emerald': return <MatrixRain />
-            case 'midnight': return <StarField />
-            case 'solar': return (
-                <LightRays
-                    raysOrigin="bottom-left"
-                    raysColor="#ff8c00"
-                    raysSpeed={0.8}
-                    lightSpread={1.2}
-                    rayLength={1.5}
-                    pulsating={true}
-                    fadeDistance={1.2}
-                    saturation={1.2}
-                    followMouse={false}
-                    noiseAmount={0.05}
-                    distortion={0.02}
-                />
-            )
-            case 'cosmic': return <NebulaEffect />
-            default: return <StarField />
+            case 'emerald': return <MatrixRain reduced={reduced} />
+            case 'midnight': return <StarField reduced={reduced} />
+            case 'solar': return <LightRaysWrapper reduced={reduced} />
+            case 'cosmic': return <NebulaEffect reduced={reduced} />
+            default: return <StarField reduced={reduced} />
         }
     }
 
@@ -195,21 +262,21 @@ const Footer = () => {
         <footer className="relative overflow-hidden [background-color:var(--bg-primary)] border-t [border-color:var(--border-color)]">
             {renderThemeEffect()}
 
-            <div className="relative z-20 max-w-6xl mx-auto px-8 py-16">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+            <div className="relative z-20 max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-10 md:py-16">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 md:gap-10">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5 }}
-                        className="space-y-4"
+                        className="space-y-4 text-center sm:text-left"
                     >
-                        <h3 className="text-2xl font-bold [color:var(--text-primary)]">
+                        <h3 className="text-xl md:text-2xl font-bold [color:var(--text-primary)]">
                             Tanmoy<span className="[color:var(--accent)]">.</span>
                         </h3>
                         <p className="text-sm [color:var(--text-secondary)] leading-relaxed opacity-70">
                             Backend developer crafting robust APIs and scalable systems.
                         </p>
-                        <div className="flex items-center gap-3 pt-2">
+                        <div className="flex items-center gap-3 pt-2 justify-center sm:justify-start">
                             {socialLinks.map((social, index) => (
                                 <motion.a
                                     key={index}
@@ -217,10 +284,10 @@ const Footer = () => {
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     whileHover={{ scale: 1.1, y: -2 }}
-                                    className="h-10 w-10 rounded-lg [background-color:var(--bg-secondary)] border [border-color:var(--border-color)] flex items-center justify-center [color:var(--text-secondary)] hover:[color:var(--accent)] hover:border-[color:var(--accent)] transition-all duration-300"
+                                    className="h-9 w-9 md:h-10 md:w-10 rounded-lg [background-color:var(--bg-secondary)] border [border-color:var(--border-color)] flex items-center justify-center [color:var(--text-secondary)] hover:[color:var(--accent)] hover:border-[color:var(--accent)] transition-all duration-300"
                                     aria-label={social.label}
                                 >
-                                    <social.icon className="text-base" />
+                                    <social.icon className="text-sm md:text-base" />
                                 </motion.a>
                             ))}
                         </div>
@@ -230,7 +297,7 @@ const Footer = () => {
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 0.1 }}
-                        className="space-y-4"
+                        className="space-y-4 text-center sm:text-left"
                     >
                         <h4 className="text-xs font-bold [color:var(--text-secondary)] uppercase tracking-[0.15em]">
                             Quick Links
@@ -252,12 +319,12 @@ const Footer = () => {
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 0.2 }}
-                        className="space-y-4"
+                        className="space-y-4 text-center sm:text-left sm:col-span-2 md:col-span-1"
                     >
                         <h4 className="text-xs font-bold [color:var(--text-secondary)] uppercase tracking-[0.15em]">
                             Built With
                         </h4>
-                        <div className="flex flex-wrap gap-2">
+                        <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
                             <span className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md [background-color:var(--bg-secondary)] border [border-color:var(--border-color)] text-xs [color:var(--text-secondary)]">
                                 <SiReact className="text-cyan-400" /> React
                             </span>
@@ -272,9 +339,10 @@ const Footer = () => {
                 </div>
             </div>
 
-            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 pointer-events-none select-none z-10">
+            {/* Large Background Text - Hidden on mobile */}
+            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 pointer-events-none select-none z-10 hidden md:block">
                 <span
-                    className="text-[20vw] font-black tracking-tighter whitespace-nowrap leading-none block translate-y-[40%]"
+                    className="text-[15vw] lg:text-[20vw] font-black tracking-tighter whitespace-nowrap leading-none block translate-y-[40%]"
                     style={{
                         color: isSolar ? 'rgba(0, 0, 0, 0.06)' : 'var(--text-primary)',
                         opacity: isSolar ? 1 : 0.03
@@ -285,12 +353,12 @@ const Footer = () => {
             </div>
 
             <div className="relative z-20 border-t [border-color:var(--border-color)]">
-                <div className="max-w-6xl mx-auto px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
+                <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-4 md:py-5 flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-3">
                     <p className="text-xs [color:var(--text-secondary)] opacity-50">
                         © {currentYear} Tanmoy Debnath
                     </p>
                     <p className="text-xs [color:var(--text-secondary)] opacity-50 flex items-center gap-1">
-                        Made with <FaHeart className="text-red-500 text-[10px]" /> & <span className="[color:var(--accent)]">coffee</span>
+                        Made with <FaHeart className="text-red-500 text-[10px]" /> & <span className="[color:var(--accent)]">lot's of coffee</span>
                     </p>
                 </div>
             </div>

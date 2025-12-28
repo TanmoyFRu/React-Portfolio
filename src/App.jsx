@@ -30,11 +30,16 @@ const App = () => {
   });
 
   useEffect(() => {
+    // Disable smooth scroll on mobile for performance
+    const isMobile = window.innerWidth < 768 || 'ontouchstart' in window;
+    if (isMobile) return;
+
     const lenis = new Lenis({
-      duration: 1.0,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      lerp: 0.1, // Lighter than duration-based
       smoothWheel: true,
-      wheelMultiplier: 1.1
+      wheelMultiplier: 1,
+      touchMultiplier: 1.5,
+      infinite: false,
     })
 
     function raf(time) {
@@ -70,7 +75,7 @@ const App = () => {
   }
 
   return (
-    <div className="overflow-x-hidden antialiased selection:bg-indigo-500/30 selection:text-indigo-200 cursor-none">
+    <div className="overflow-x-hidden antialiased selection:bg-indigo-500/30 selection:text-indigo-200 lg:cursor-none">
       {isLoading && <SplashScreen onComplete={() => setIsLoading(false)} />}
 
       <CustomCursor />
