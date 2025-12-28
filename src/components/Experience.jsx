@@ -3,77 +3,85 @@ import { motion } from "framer-motion"
 
 const Experience = () => {
     return (
-        <div className="pb-24">
+        <div className="pb-32">
             <motion.h2
                 whileInView={{ opacity: 1, y: 0 }}
                 initial={{ opacity: 0, y: -50 }}
                 transition={{ duration: 1 }}
-                className="my-20 text-center text-4xl lg:text-5xl font-bold tracking-tight"
+                className="my-20 text-center text-4xl lg:text-5xl font-bold tracking-tight [color:var(--text-primary)]"
             >
-                Experience
+                Experience<span className="[color:var(--accent)]">.</span>
             </motion.h2>
 
-            <div className="relative mx-auto max-w-6xl px-4">
-                {/* Vertical Timeline Line */}
-                <div className="absolute left-4 lg:left-1/2 top-0 h-full w-0.5 -translate-x-1/2 bg-gradient-to-b from-indigo-500/50 via-purple-500/50 to-transparent" />
+            <div className="max-w-4xl mx-auto px-4 relative">
+                {/* Modern Roadmap Line */}
+                <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-[1px] bg-gradient-to-b from-[var(--accent)] via-[var(--accent-glow)] to-transparent opacity-30" />
 
-                {EXPERIENCES.map((experience, index) => (
-                    <div key={index} className={`mb-16 flex flex-wrap lg:justify-between items-center w-full ${index % 2 === 0 ? 'lg:flex-row-reverse' : ''}`}>
-                        {/* Timeline Node / Company Logo */}
-                        <div className="absolute left-4 lg:left-1/2 -translate-x-1/2 z-20">
-                            {experience.logo ? (
+                <div className="space-y-24">
+                    {EXPERIENCES.map((experience, index) => (
+                        <div key={index} className="relative flex flex-col md:flex-row items-start md:items-center">
+                            {/* Roadmap Node with Logo - Visible on all devices */}
+                            <div className="absolute left-0 md:left-1/2 md:ml-[-25px] z-10 group/logo">
                                 <motion.div
-                                    whileInView={{ scale: [0, 1.2, 1] }}
-                                    transition={{ duration: 0.5 }}
-                                    className="h-10 w-10 lg:h-14 lg:w-14 rounded-full border-2 border-indigo-500 bg-white p-1 shadow-[0_0_15px_rgba(99,102,241,0.5)] overflow-hidden"
+                                    initial={{ scale: 0 }}
+                                    whileInView={{ scale: 1 }}
+                                    whileHover={{ scale: 1.15, rotate: 5 }}
+                                    className="w-[40px] h-[40px] md:w-[50px] md:h-[50px] rounded-full border-3 md:border-4 [border-color:var(--accent)] overflow-hidden flex items-center justify-center transition-all duration-500 hover:border-[6px] cursor-pointer"
+                                    style={{ boxShadow: '0 0 15px var(--accent-glow), 0 0 3px var(--accent)' }}
                                 >
                                     <img
                                         src={experience.logo}
-                                        alt={`${experience.company} logo`}
-                                        className="h-full w-full object-contain"
+                                        alt={experience.company}
+                                        className="w-full h-full object-cover group-hover/logo:scale-110 transition-transform duration-500"
                                     />
                                 </motion.div>
-                            ) : (
-                                <div className="h-4 w-4 rounded-full bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.8)]" />
-                            )}
-                        </div>
-
-                        <motion.div
-                            whileInView={{ opacity: 1, x: 0 }}
-                            initial={{ opacity: 0, x: index % 2 === 0 ? 50 : -50 }}
-                            transition={{ duration: 0.8, delay: 0.2 }}
-                            className="w-full lg:w-[45%] pl-10 lg:pl-0"
-                        >
-                            <div className="group relative rounded-3xl border border-stone-800 bg-stone-900/40 p-6 lg:p-8 backdrop-blur-md hover:border-indigo-500/50 transition-all duration-500 shadow-xl hover:shadow-indigo-500/10">
-                                <span className="inline-block rounded-full bg-stone-800 px-4 py-1 text-xs font-semibold text-indigo-400 mb-4 shadow-inner">
-                                    {experience.year}
-                                </span>
-                                <h3 className="mb-2 text-2xl font-bold tracking-tight text-stone-100">
-                                    {experience.role}
-                                </h3>
-                                <h4 className="mb-4 text-lg font-medium text-indigo-300">
-                                    {experience.company}
-                                </h4>
-                                <p className="mb-6 text-stone-400 leading-relaxed font-light text-base lg:text-lg">
-                                    {experience.description}
-                                </p>
-                                <div className="flex flex-wrap gap-2">
-                                    {experience.technologies.map((tech, idx) => (
-                                        <span
-                                            key={idx}
-                                            className="rounded-full bg-stone-800/80 px-3 py-1 text-[10px] lg:text-xs font-medium text-stone-300 border border-stone-700/50"
-                                        >
-                                            {tech}
-                                        </span>
-                                    ))}
-                                </div>
                             </div>
-                        </motion.div>
 
-                        {/* Empty spacer for desktop layout */}
-                        <div className="hidden lg:block lg:w-[45%]" />
-                    </div>
-                ))}
+                            {/* Content Card */}
+                            <motion.div
+                                whileInView={{ opacity: 1, x: 0 }}
+                                initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
+                                transition={{ duration: 0.8 }}
+                                className={`w-full pl-14 md:pl-0 md:w-[42%] ${index % 2 === 0 ? 'md:mr-auto' : 'md:ml-auto'} group`}
+                            >
+                                <div className="relative p-10 rounded-[2rem] border border-[color:var(--border-color)] [background-color:rgba(var(--bg-secondary),0.3)] backdrop-blur-xl hover:border-[color:var(--accent)] transition-all duration-700 group-hover:shadow-[0_0_30px_var(--accent-glow)] overflow-hidden">
+                                    {/* Subtle Background Accent */}
+                                    <div className="absolute -top-10 -right-10 w-24 h-24 [background-color:var(--accent)] opacity-0 group-hover:opacity-10 rounded-full blur-3xl transition-opacity duration-700" />
+
+                                    <div className="flex flex-col gap-6">
+                                        <div className="flex items-center justify-between">
+                                            <div>
+                                                <h3 className="text-xl font-bold [color:var(--text-primary)] group-hover:[color:var(--accent)] transition-colors line-height-tight">
+                                                    {experience.company}
+                                                </h3>
+                                                <span className="text-xs font-bold tracking-[0.2em] uppercase opacity-50 [color:var(--text-secondary)]">
+                                                    {experience.year}
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <h4 className="text-lg font-semibold [color:var(--text-primary)] mb-3 opacity-90">
+                                                {experience.role}
+                                            </h4>
+                                            <p className="text-sm leading-relaxed [color:var(--text-secondary)] font-light opacity-80 mb-6">
+                                                {experience.description}
+                                            </p>
+                                        </div>
+
+                                        <div className="flex flex-wrap gap-2">
+                                            {experience.technologies.map((tech, i) => (
+                                                <span key={i} className="px-3 py-1 text-[10px] font-bold [background-color:var(--bg-secondary)] [color:var(--text-primary)] border border-[color:var(--border-color)] rounded-lg tracking-wider uppercase opacity-60 group-hover:opacity-100 group-hover:border-[color:var(--accent)] group-hover:[color:var(--accent)] transition-all duration-300">
+                                                    {tech}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            </motion.div>
+                        </div>
+                    ))}
+                </div>
             </div>
         </div>
     )

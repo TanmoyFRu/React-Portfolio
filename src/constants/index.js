@@ -2,6 +2,7 @@ import project1 from "../assets/projects/link-ingestor-v2.png";
 import project2 from "../assets/projects/chat-backend-v2.png";
 import project4 from "../assets/projects/blog-auth-v3.png";
 import yupchaLogo from "../assets/yupcha_logo.jpg";
+import collegeLogo from "../assets/college logo.png";
 
 export const HERO_CONTENT = `I am a passionate backend developer with a deep expertise in crafting robust, scalable, and secure server-side applications. I specialize in Python and FastAPI, with a strong foundation in database management (PostgreSQL, MySQL, MongoDB) and real-time systems. My goal is to build high-performance APIs and autonomous systems that solve complex backend challenges and drive seamless digital experiences.`;
 
@@ -23,25 +24,35 @@ export const PROJECTS = [
     title: "Link Ingestor API",
     image: project1,
     description:
-      "An autonomous system designed to ingest and process webpage data at scale, specifically focusing on efficient multi-page link retrieval and data extraction architecture.",
-    technologies: ["Python", "Web Scraping", "Automation", "Data Processing"],
+      "A high-performance autonomous system for large-scale webpage data ingestion. Features intelligent backlink discovery via Bing Search API and async processing architecture.",
+    technologies: ["FastAPI", "PostgreSQL", "Redis", "Celery", "Docker"],
     github: "https://github.com/TanmoyFRu/Link-Ingestor-API",
   },
   {
     title: "ChatApp Backend",
     image: project2,
     description:
-      "A high-performance backend for real-time messaging, implementing scalable communication protocols to handle concurrent user connections and message delivery.",
-    technologies: ["Python", "WebSockets", "Real-time Architecture", "Scalable Systems"],
+      "A scalable messaging backend integrated with Google Gemini AI for real-time intelligent responses. Uses Celery for non-blocking AI task processing and conversation context management.",
+    technologies: ["FastAPI", "Gemini AI", "Redis", "Celery", "PostgreSQL"],
     github: "https://github.com/TanmoyFRu/ChatApp-Backend",
   },
   {
     title: "User-Blog Authentication API",
     image: project4,
     description:
-      "A robust RESTful API featuring JWT-based authentication, full CRUD operations for users and content, and complex relational database management.",
-    technologies: ["Python", "FastAPI", "JWT", "PostgreSQL", "REST API"],
+      "A secure RESTful API with JWT authentication and full CRUD capabilities. Implements complex relational mapping between users and content with robust password hashing.",
+    technologies: ["FastAPI", "JWT", "SQLAlchemy", "SQLite"],
     github: "https://github.com/TanmoyFRu/User-Blog-Authentication-API",
+  },
+];
+
+export const EDUCATION = [
+  {
+    year: "2021 - 2025",
+    degree: "B.Tech in Computer Science and Engineering",
+    institution: "Techno College of Engineering Agartala",
+    logo: collegeLogo,
+    description: "Focusing on Software Engineering, Backend Systems, and Scalable Architectures. Actively involved in developing autonomous systems and real-time AI integrations.",
   },
 ];
 
