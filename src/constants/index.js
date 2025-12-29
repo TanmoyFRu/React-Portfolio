@@ -1,8 +1,8 @@
-import linkMinimal from "../assets/projects/link_minimal.png";
-import chatMinimal from "../assets/projects/chat_minimal.png";
-import project4 from "../assets/projects/blog-auth-v3.png";
-import yupchaLogo from "../assets/yupcha_logo.jpg";
-import collegeLogo from "../assets/college logo.png";
+import linkMinimal from "../assets/projects/link_minimal.webp";
+import chatMinimal from "../assets/projects/chat_minimal.webp";
+import project4 from "../assets/projects/blog-auth-v3.webp";
+import yupchaLogo from "../assets/yupcha_logo.webp";
+import collegeLogo from "../assets/college logo.webp";
 
 export const HERO_CONTENT = `I am a passionate backend developer with a deep expertise in crafting robust, scalable, and secure server-side applications. I specialize in Python and FastAPI, with a strong foundation in database management (PostgreSQL, MySQL, MongoDB) and real-time systems. My goal is to build high-performance APIs and autonomous systems that solve complex backend challenges and drive seamless digital experiences.`;
 

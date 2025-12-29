@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import profilePicture from "../assets/TanmoyDebnathProfileNew.png"
+import profilePicture from "../assets/TanmoyDebnathProfileNew.webp"
 import { HERO_CONTENT } from "../constants"
 import { motion } from 'framer-motion'
 import { TypeAnimation } from 'react-type-animation'

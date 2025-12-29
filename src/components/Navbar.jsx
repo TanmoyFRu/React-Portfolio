@@ -1,5 +1,5 @@
 import { FaFacebook, FaGithub, FaInstagram, FaLinkedin, FaTerminal } from "react-icons/fa"
-import logo from "../assets/RefinedTDLogo.png"
+import logo from "../assets/RefinedTDLogo.webp"
 import Magnetic from "./Magnetic"
 import ThemeToggle from "./ThemeToggle"
 
