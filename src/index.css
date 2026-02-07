@@ -62,6 +62,25 @@ body {
   background-color: var(--bg-primary);
   color: var(--text-primary);
   transition: background-color 0.5s ease, color 0.5s ease;
+  overflow-x: hidden;
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='%236366f1' d='M5.5 3.21V20.8l5.56-5.57h7.43L5.5 3.21z'/%3E%3Cpath fill='%23ffffff' stroke='%236366f1' stroke-width='1' d='M6.5 5.5v12l4-4h5z'/%3E%3C/svg%3E") 0 0, auto;
+}
+
+[data-theme="solar"] body {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='%23f59e0b' d='M5.5 3.21V20.8l5.56-5.57h7.43L5.5 3.21z'/%3E%3Cpath fill='%231c1917' stroke='%23f59e0b' stroke-width='1' d='M6.5 5.5v12l4-4h5z'/%3E%3C/svg%3E") 0 0, auto;
+}
+
+[data-theme="cosmic"] body {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='%23a855f7' d='M5.5 3.21V20.8l5.56-5.57h7.43L5.5 3.21z'/%3E%3Cpath fill='%23f8fafc' stroke='%23a855f7' stroke-width='1' d='M6.5 5.5v12l4-4h5z'/%3E%3C/svg%3E") 0 0, auto;
+}
+
+[data-theme="emerald"] body {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='%2310b981' d='M5.5 3.21V20.8l5.56-5.57h7.43L5.5 3.21z'/%3E%3Cpath fill='%23ecfdf5' stroke='%2310b981' stroke-width='1' d='M6.5 5.5v12l4-4h5z'/%3E%3C/svg%3E") 0 0, auto;
+}
+
+html {
+  /* Let Lenis handle smooth scrolling */
+  scroll-behavior: auto !important;
 }
 
 ::selection {
@@ -74,7 +93,8 @@ body {
   background-image: radial-gradient(circle at 50% 0%,
       var(--accent-glow) 0%,
       transparent 70%);
-  transition: all 0.5s ease;
+  /* Optimized: generic 'all' transitions cause layout thrashing */
+  transition: background-color 0.5s ease, opacity 0.5s ease;
 }
 
 /* Custom Scrollbar */
@@ -148,15 +168,18 @@ body {
 
 .animate-matrix-rain {
   animation: matrix-rain 2s linear infinite;
+  will-change: transform, opacity;
 }
 
 .animate-matrix-rain-delayed {
   animation: matrix-rain 2s linear infinite;
   animation-delay: 1s;
+  will-change: transform, opacity;
 }
 
 .animate-matrix-rain-vertical {
   animation: matrix-rain-vertical 2s linear infinite;
+  will-change: transform;
 }
 
 @keyframes grain {
@@ -251,4 +274,17 @@ body {
 
 .animate-grain {
   animation: grain 8s steps(10) infinite;
+  will-change: transform;
+}
+
+.gpu-accel {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+.blur-optimized {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  /* Ensure this doesn't clip unless needed */
 }

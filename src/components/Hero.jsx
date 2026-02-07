@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, memo } from "react"
 import profilePicture from "../assets/TanmoyDebnathProfileNew.webp"
 import { HERO_CONTENT } from "../constants"
 import { motion } from 'framer-motion'
@@ -97,7 +97,7 @@ const ThemeDecoration = ({ theme, isLowPerf }) => {
           {[...Array(elementCount)].map((_, i) => (
             <motion.div
               key={i}
-              className="absolute text-green-500/60 font-mono text-sm md:text-lg font-bold hidden md:block"
+              className="absolute text-green-500/60 font-mono text-sm md:text-lg font-bold hidden md:block gpu-accel"
               style={{
                 left: `${5 + (i * 7) % 90}%`,
                 top: `${10 + (i * 13) % 80}%`
@@ -127,7 +127,7 @@ const ThemeDecoration = ({ theme, isLowPerf }) => {
       return (
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <motion.div
-            className="absolute -top-20 md:-top-40 -right-20 md:-right-40 w-64 h-64 md:w-[500px] md:h-[500px] rounded-full bg-gradient-radial from-orange-400/25 via-yellow-300/15 to-transparent blur-3xl"
+            className="absolute -top-20 md:-top-40 -right-20 md:-right-40 w-64 h-64 md:w-[500px] md:h-[500px] rounded-full bg-gradient-radial from-orange-400/25 via-yellow-300/15 to-transparent blur-3xl gpu-accel"
             animate={{ scale: [1, 1.15, 1], opacity: [0.4, 0.6, 0.4] }}
             transition={{ duration: 5, repeat: Infinity }}
           />
@@ -148,7 +148,7 @@ const ThemeDecoration = ({ theme, isLowPerf }) => {
           {[...Array(particleCount)].map((_, i) => (
             <motion.div
               key={`p-${i}`}
-              className="absolute w-1 h-1 md:w-1.5 md:h-1.5 rounded-full bg-orange-400/50 hidden sm:block"
+              className="absolute w-1 h-1 md:w-1.5 md:h-1.5 rounded-full bg-orange-400/50 hidden sm:block gpu-accel"
               style={{ left: `${20 + i * 8}%`, top: `${15 + (i * 9) % 60}%` }}
               animate={{ y: [0, -15, 0], opacity: [0.3, 0.7, 0.3] }}
               transition={{ duration: 3 + i * 0.4, repeat: Infinity, delay: i * 0.3 }}
@@ -160,14 +160,14 @@ const ThemeDecoration = ({ theme, isLowPerf }) => {
       return (
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <motion.div
-            className="absolute top-1/4 left-1/4 w-48 h-48 md:w-96 md:h-96 rounded-full bg-purple-500/10 blur-[80px]"
+            className="absolute top-1/4 left-1/4 w-48 h-48 md:w-96 md:h-96 rounded-full bg-purple-500/10 blur-[80px] gpu-accel"
             animate={{ scale: [1, 1.2, 1], opacity: [0.2, 0.4, 0.2] }}
             transition={{ duration: 6, repeat: Infinity }}
           />
           {[...Array(starCount)].map((_, i) => (
             <motion.div
               key={i}
-              className="absolute rounded-full bg-purple-300"
+              className="absolute rounded-full bg-purple-300 gpu-accel"
               style={{
                 left: `${(i * 17) % 95}%`,
                 top: `${(i * 13) % 90}%`,
@@ -182,7 +182,7 @@ const ThemeDecoration = ({ theme, isLowPerf }) => {
             />
           ))}
           <motion.div
-            className="absolute w-16 md:w-20 h-0.5 bg-gradient-to-r from-purple-400 to-transparent rounded-full hidden md:block"
+            className="absolute w-16 md:w-20 h-0.5 bg-gradient-to-r from-purple-400 to-transparent rounded-full hidden md:block gpu-accel"
             initial={{ left: '80%', top: '10%', rotate: 45 }}
             animate={{ left: ['80%', '20%'], top: ['10%', '50%'], opacity: [0, 1, 0] }}
             transition={{ duration: 3, repeat: Infinity, repeatDelay: 5 }}
@@ -194,14 +194,14 @@ const ThemeDecoration = ({ theme, isLowPerf }) => {
       return (
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <motion.div
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 md:w-[400px] md:h-[400px] rounded-full bg-indigo-500/10 blur-[100px]"
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 md:w-[400px] md:h-[400px] rounded-full bg-indigo-500/10 blur-[100px] gpu-accel"
             animate={{ scale: [1, 1.1, 1], opacity: [0.15, 0.25, 0.15] }}
             transition={{ duration: 5, repeat: Infinity }}
           />
           {[...Array(dotCount)].map((_, i) => (
             <motion.div
               key={i}
-              className="absolute rounded-full bg-indigo-400 hidden sm:block"
+              className="absolute rounded-full bg-indigo-400 hidden sm:block gpu-accel"
               style={{
                 left: `${(i * 11) % 90 + 5}%`,
                 top: `${(i * 17) % 85 + 5}%`,
@@ -247,7 +247,9 @@ const Hero = () => {
               <motion.img
                 src={profilePicture}
                 alt="Tanmoy Debnath"
-                className="relative border border-stone-800/10 rounded-3xl grayscale-[0.2] brightness-[0.9] contrast-[1.1] sepia-[0.1] hover:grayscale-0 hover:brightness-100 transition-all duration-700 shadow-2xl w-[300px] md:w-[400px] lg:w-[500px]"
+                priority="true"
+                fetchPriority="high"
+                className="relative border border-stone-800/10 rounded-3xl grayscale-[0.2] brightness-[0.9] contrast-[1.1] sepia-[0.1] hover:grayscale-0 hover:brightness-100 transition-[filter,box-shadow,transform] duration-700 shadow-2xl w-[300px] md:w-[400px] lg:w-[500px] gpu-accel will-change-[filter]"
                 initial={{ x: 100, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ duration: 1, delay: 1.5 }}
@@ -269,11 +271,9 @@ const Hero = () => {
             <motion.div variants={ChildVariants} className="h-[50px] md:h-[60px] lg:h-[80px]">
               <TypeAnimation
                 sequence={[
-                  'Full Stack Developer',
+                  'Backend Developer',
                   2000,
-                  'Backend Specialist',
-                  2000,
-                  'Automation Wizard',
+                  'Automation Engineer',
                   2000,
                   'Problem Solver',
                   2000
@@ -311,4 +311,4 @@ const Hero = () => {
   )
 }
 
-export default Hero
+export default memo(Hero)

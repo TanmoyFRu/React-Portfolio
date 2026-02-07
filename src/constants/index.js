@@ -1,6 +1,6 @@
-import linkMinimal from "../assets/projects/link_minimal.webp";
-import chatMinimal from "../assets/projects/chat_minimal.webp";
-import project4 from "../assets/projects/blog-auth-v3.webp";
+import linkMinimal from "../assets/projects/link-ingestor-v2.webp";
+import chatMinimal from "../assets/projects/chat-backend-v2.webp";
+import project4 from "../assets/projects/blog-auth-v2.webp";
 import yupchaLogo from "../assets/yupcha_logo.webp";
 import collegeLogo from "../assets/college logo.webp";
 

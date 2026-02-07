@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, memo } from "react"
 import { ABOUT_TEXT } from "../constants"
 import { motion, useInView } from "framer-motion"
 import { FaMapMarkerAlt, FaClock, FaCircle, FaCode, FaBriefcase, FaRocket, FaTerminal, FaSun, FaStar, FaMoon } from "react-icons/fa"
@@ -28,6 +28,25 @@ const AnimatedCounter = ({ end, duration = 2, suffix = "" }) => {
   return <span ref={ref}>{count}{suffix}</span>
 }
 
+// Separate Clock component to prevent full re-renders
+const LocalTime = memo(() => {
+  const [time, setTime] = useState(new Date())
+
+  useEffect(() => {
+    const timer = setInterval(() => setTime(new Date()), 1000)
+    return () => clearInterval(timer)
+  }, [])
+
+  const formattedTime = time.toLocaleTimeString('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: true
+  })
+
+  return <p className="[color:var(--text-primary)] text-sm font-mono">{formattedTime}</p>
+})
+
 // Theme-specific decoration icon for stats
 const ThemeIcon = ({ theme }) => {
   const iconClass = "text-[8px] [color:var(--accent)] opacity-60"
@@ -41,20 +60,7 @@ const ThemeIcon = ({ theme }) => {
 }
 
 const About = () => {
-  const [time, setTime] = useState(new Date())
   const { theme } = useTheme()
-
-  useEffect(() => {
-    const timer = setInterval(() => setTime(new Date()), 1000)
-    return () => clearInterval(timer)
-  }, [])
-
-  const formattedTime = time.toLocaleTimeString('en-US', {
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    hour12: true
-  })
 
   // Calculate experience dynamically from start date (September 2025)
   const startDate = new Date(2025, 8, 1) // September 2025 (month is 0-indexed)
@@ -86,7 +92,7 @@ const About = () => {
           initial={{ opacity: 0, x: -50 }}
           viewport={{ once: true }}
           transition={{ duration: 1 }}
-          className="w-full lg:w-3/5 [background-color:rgba(var(--bg-secondary),0.2)] border [border-color:var(--border-color)] p-6 md:p-8 lg:p-12 rounded-2xl md:rounded-[2.5rem] backdrop-blur-md"
+          className="w-full lg:w-3/5 [background-color:rgba(var(--bg-secondary),0.2)] border [border-color:var(--border-color)] p-6 md:p-8 lg:p-12 rounded-2xl md:rounded-[2.5rem] blur-optimized gpu-accel"
           style={{ backgroundColor: 'color-mix(in srgb, var(--bg-secondary), transparent 80%)' }}
         >
           <p className="text-sm md:text-base lg:text-lg leading-relaxed tracking-tight [color:var(--text-secondary)] font-light text-justify">
@@ -110,7 +116,7 @@ const About = () => {
                   ease: [0.16, 1, 0.3, 1]
                 }}
                 whileHover={{ scale: 1.05, y: -5 }}
-                className="group relative overflow-hidden [background-color:rgba(var(--bg-secondary),0.4)] border [border-color:var(--border-color)] p-4 rounded-2xl backdrop-blur-xl hover:border-[color:var(--accent)] transition-all duration-500 text-center"
+                className="group relative overflow-hidden [background-color:rgba(var(--bg-secondary),0.4)] border [border-color:var(--border-color)] p-4 rounded-2xl blur-optimized hover:border-[color:var(--accent)] transition-all duration-500 text-center gpu-accel"
                 style={{ backgroundColor: 'color-mix(in srgb, var(--bg-secondary), transparent 60%)' }}
               >
                 {/* Theme decoration in corner */}
@@ -137,7 +143,7 @@ const About = () => {
             initial={{ opacity: 0, y: 30 }}
             viewport={{ once: true }}
             transition={{ duration: 1, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="group relative overflow-hidden [background-color:rgba(var(--bg-secondary),0.4)] border [border-color:var(--border-color)] p-8 rounded-[2.5rem] backdrop-blur-xl hover:border-[color:var(--accent)] transition-all duration-500"
+            className="group relative overflow-hidden [background-color:rgba(var(--bg-secondary),0.4)] border [border-color:var(--border-color)] p-8 rounded-[2.5rem] blur-optimized hover:border-[color:var(--accent)] transition-all duration-500 gpu-accel"
             style={{ backgroundColor: 'color-mix(in srgb, var(--bg-secondary), transparent 60%)' }}
           >
             <div className="relative z-10 space-y-6">
@@ -166,7 +172,7 @@ const About = () => {
                   </div>
                   <div>
                     <p className="text-[10px] [color:var(--text-secondary)] font-bold uppercase opacity-60">Local Time</p>
-                    <p className="[color:var(--text-primary)] text-sm font-mono">{formattedTime}</p>
+                    <LocalTime />
                   </div>
                 </div>
               </div>
@@ -178,7 +184,7 @@ const About = () => {
               </div>
             </div>
             {/* Decorative Background Glow */}
-            <div className="absolute -bottom-10 -right-10 w-32 h-32 [background-color:var(--accent)] opacity-10 rounded-full blur-3xl group-hover:opacity-20 transition-all duration-500" />
+            <div className="absolute -bottom-10 -right-10 w-32 h-32 [background-color:var(--accent)] opacity-10 rounded-full blur-3xl group-hover:opacity-20 transition-opacity duration-500" />
           </motion.div>
         </div>
       </div>
@@ -186,4 +192,4 @@ const About = () => {
   )
 }
 
-export default About
+export default memo(About)

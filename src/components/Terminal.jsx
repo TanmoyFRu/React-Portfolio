@@ -180,13 +180,13 @@ const Terminal = ({ isOpen, onClose }) => {
         <AnimatePresence>
             {isOpen && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-12 pointer-events-none">
-                    {/* Backdrop with heavy blur */}
+                    {/* Backdrop with heavy blur - Optimized */}
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         onClick={onClose}
-                        className="absolute inset-0 bg-black/80 backdrop-blur-2xl pointer-events-auto"
+                        className="absolute inset-0 bg-black/80 pointer-events-auto will-change-[opacity]"
                     />
 
                     {/* Terminal Container */}
@@ -194,10 +194,10 @@ const Terminal = ({ isOpen, onClose }) => {
                         initial={{ opacity: 0, scale: 0.9, y: 30 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                        className="relative w-full max-w-5xl h-full max-h-[700px] bg-black/90 border border-green-500/30 rounded-2xl shadow-[0_0_50px_rgba(34,197,94,0.1)] overflow-hidden flex flex-col pointer-events-auto group"
+                        className="relative w-full max-w-5xl h-full max-h-[700px] bg-black/90 border border-green-500/30 rounded-2xl shadow-[0_0_50px_rgba(34,197,94,0.1)] overflow-hidden flex flex-col pointer-events-auto group will-change-[transform,opacity]"
                     >
-                        {/* CRT Scanline Effect */}
-                        <div className="absolute inset-0 pointer-events-none z-50 opacity-[0.03] animate-pulse bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_2px,3px_100%]" />
+                        {/* CRT Scanline Effect - Optimized opacity */}
+                        <div className="absolute inset-0 pointer-events-none z-50 opacity-[0.03] animate-pulse bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_2px,3px_100%] will-change-[opacity]" />
 
                         {/* Top Bar (OSX Style) */}
                         <div className="flex items-center justify-between px-6 py-4 bg-zinc-900/50 border-b border-white/5">

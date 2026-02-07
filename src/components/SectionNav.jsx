@@ -17,24 +17,40 @@ const SectionNav = () => {
 
     useEffect(() => {
         const handleScroll = () => {
-            // Show nav after scrolling down a bit
             setIsVisible(window.scrollY > 300)
-
-            // Determine active section
-            const scrollPosition = window.scrollY + window.innerHeight / 3
-
-            for (let i = sections.length - 1; i >= 0; i--) {
-                const section = document.getElementById(sections[i].id)
-                if (section && section.offsetTop <= scrollPosition) {
-                    setActiveSection(sections[i].id)
-                    break
-                }
-            }
         }
 
-        window.addEventListener("scroll", handleScroll)
+        // Passive listener for better scrolling performance
+        window.addEventListener("scroll", handleScroll, { passive: true })
+
+        // Use IntersectionObserver for section highlighting
+        const observerOptions = {
+            root: null,
+            rootMargin: "-20% 0px -60% 0px", // Trigger when section is near top/center
+            threshold: 0
+        }
+
+        const observerCallback = (entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    setActiveSection(entry.target.id)
+                }
+            })
+        }
+
+        const observer = new IntersectionObserver(observerCallback, observerOptions)
+
+        sections.forEach(section => {
+            const element = document.getElementById(section.id)
+            if (element) observer.observe(element)
+        })
+
         handleScroll() // Initial check
-        return () => window.removeEventListener("scroll", handleScroll)
+
+        return () => {
+            window.removeEventListener("scroll", handleScroll)
+            observer.disconnect()
+        }
     }, [])
 
     const scrollToSection = (id) => {
@@ -97,8 +113,8 @@ const SectionNav = () => {
                                 {/* Inner dot */}
                                 <div
                                     className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${activeSection === section.id
-                                            ? "[background-color:var(--accent)]"
-                                            : "[background-color:var(--text-secondary)] opacity-40 group-hover:opacity-70"
+                                        ? "[background-color:var(--accent)]"
+                                        : "[background-color:var(--text-secondary)] opacity-40 group-hover:opacity-70"
                                         }`}
                                 />
                             </motion.div>

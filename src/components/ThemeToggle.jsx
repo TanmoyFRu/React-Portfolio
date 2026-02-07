@@ -25,7 +25,7 @@ const ThemeToggle = () => {
                 <Magnetic key={t.id}>
                     <button
                         onClick={() => setTheme(t.id)}
-                        className={`relative p-2 sm:p-2.5 rounded-full transition-all duration-300 group ${theme === t.id ? "text-white" : "[color:var(--text-secondary)] hover:[color:var(--text-primary)]"
+                        className={`relative p-2 sm:p-2.5 rounded-full transition-colors duration-300 group ${theme === t.id ? "text-white" : "[color:var(--text-secondary)] hover:[color:var(--text-primary)]"
                             }`}
                         aria-label={`Switch to ${t.label} atmosphere`}
                     >

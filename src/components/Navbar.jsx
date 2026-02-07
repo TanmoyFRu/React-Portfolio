@@ -12,7 +12,7 @@ const Navbar = ({ onTerminalToggle }) => {
             <a href="/" aria-label="Home" className="group">
               <img
                 src={logo}
-                className="relative transition-all duration-500 group-hover:scale-105"
+                className="relative transition-transform duration-500 group-hover:scale-105"
                 width={50}
                 height={50}
                 alt="Logo"
@@ -26,7 +26,7 @@ const Navbar = ({ onTerminalToggle }) => {
             <Magnetic>
               <button
                 onClick={onTerminalToggle}
-                className="p-2 [color:var(--text-secondary)] hover:[color:var(--accent)] rounded-full transition-all duration-300"
+                className="p-2 [color:var(--text-secondary)] hover:[color:var(--accent)] rounded-full transition-colors duration-300"
                 aria-label="Open Terminal"
                 title="Open Terminal (`)"
               >
@@ -39,25 +39,25 @@ const Navbar = ({ onTerminalToggle }) => {
           <div className="hidden md:flex items-center gap-2">
             <Magnetic>
               <a href="https://www.linkedin.com/in/tanmoy-dednath" target="blank" rel="noopener noreferrer" aria-label="LinkedIn"
-                className="p-2 [color:var(--text-secondary)] hover:[color:var(--accent)] rounded-full transition-all duration-300">
+                className="p-2 [color:var(--text-secondary)] hover:[color:var(--accent)] rounded-full transition-colors duration-300">
                 <FaLinkedin className="text-2xl" />
               </a>
             </Magnetic>
             <Magnetic>
               <a href="https://github.com/TanmoyFRu" target="blank" rel="noopener noreferrer" aria-label="GitHub"
-                className="p-2 [color:var(--text-secondary)] hover:[color:var(--text-primary)] rounded-full transition-all duration-300">
+                className="p-2 [color:var(--text-secondary)] hover:[color:var(--text-primary)] rounded-full transition-colors duration-300">
                 <FaGithub className="text-2xl" />
               </a>
             </Magnetic>
             <Magnetic>
               <a href="https://www.facebook.com/tanmoy.debnath.9699523" target="blank" rel="noopener noreferrer" aria-label="Facebook"
-                className="p-2 [color:var(--text-secondary)] hover:[color:var(--accent)] rounded-full transition-all duration-300">
+                className="p-2 [color:var(--text-secondary)] hover:[color:var(--accent)] rounded-full transition-colors duration-300">
                 <FaFacebook className="text-2xl" />
               </a>
             </Magnetic>
             <Magnetic>
               <a href="https://www.instagram.com/_tanmoy.pvt/" target="blank" rel="noopener noreferrer" aria-label="Instagram"
-                className="p-2 [color:var(--text-secondary)] hover:text-pink-500 rounded-full transition-all duration-300">
+                className="p-2 [color:var(--text-secondary)] hover:text-pink-500 rounded-full transition-colors duration-300">
                 <FaInstagram className="text-2xl" />
               </a>
             </Magnetic>

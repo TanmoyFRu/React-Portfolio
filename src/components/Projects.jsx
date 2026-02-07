@@ -1,169 +1,128 @@
-import { useRef, useState, useEffect, useCallback } from "react"
+import { useRef, memo } from "react"
 import { PROJECTS } from "../constants"
-import { motion } from "framer-motion"
+import { motion, useScroll, useTransform, useSpring } from "framer-motion"
+import { FaGithub } from "react-icons/fa"
 
-const ProjectCard = ({ project }) => {
+const ProjectItem = memo(({ project, index }) => {
+  const containerRef = useRef(null)
+
+  // Scroll parallax for the image
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"]
+  })
+
+  // Smooth parallax values
+  const y = useSpring(useTransform(scrollYProgress, [0, 1], [-50, 50]), { stiffness: 100, damping: 30 })
+  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0])
+  const scale = useTransform(scrollYProgress, [0, 0.2], [0.8, 1])
+
+  const isEven = index % 2 === 0
+
   return (
-    <motion.div
-      whileHover={{
-        y: -10,
-        scale: 1.02,
-        rotateX: 2,
-        rotateY: -2,
-      }}
-      transition={{ type: "spring", stiffness: 300, damping: 20 }}
-      className="flex-shrink-0 w-[85vw] md:w-[60vw] lg:w-[40vw] h-full p-6 md:p-8 lg:p-10 rounded-[2rem] border border-[color:var(--border-color)] backdrop-blur-xl flex flex-col gap-6 transition-all duration-500 hover:border-[color:var(--accent)] group relative pointer-events-auto"
-      style={{
-        backgroundColor: 'color-mix(in srgb, var(--bg-secondary), transparent 60%)',
-        perspective: '1000px' // Enable 3D perspective
-      }}
-    >
-      <div
-        className="absolute inset-0 rounded-[2rem] opacity-10 pointer-events-none group-hover:opacity-20 transition-opacity"
-        style={{
-          background: `radial-gradient(circle at center, var(--accent) 0%, transparent 70%)`,
-          filter: 'blur(40px)',
-        }}
-      />
-
-      <a
-        href={project.github}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="w-full aspect-[16/9] overflow-hidden rounded-xl md:rounded-2xl shadow-xl relative block bg-black/5"
+    <div ref={containerRef} className="min-h-[80vh] flex items-center justify-center py-20 relative px-4 md:px-0">
+      {/* Massive Background Index */}
+      <motion.span
+        initial={{ opacity: 0, x: isEven ? -100 : 100 }}
+        whileInView={{ opacity: 0.15, x: isEven ? -20 : 20 }}
+        transition={{ duration: 1.5 }}
+        className={`absolute text-[15rem] md:text-[25rem] font-black pointer-events-none select-none [color:var(--accent)] hidden lg:block ${isEven ? 'left-0' : 'right-0'} top-1/2 -translate-y-1/2 z-0 gpu-accel`}
       >
-        <img
-          src={project.image}
-          alt={project.title}
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end justify-center pb-6">
-          <span className="px-6 py-2 bg-white text-black rounded-full font-bold text-xs lg:text-sm shadow-lg">
-            View on GitHub
-          </span>
-        </div>
-      </a>
+        0{index + 1}
+      </motion.span>
 
-      <div className="space-y-3 flex flex-col flex-grow">
-        <h3 className="text-xl md:text-2xl font-bold [color:var(--text-primary)]">
-          {project.title}
-        </h3>
-        <p className="[color:var(--text-secondary)] text-sm md:text-base leading-relaxed line-clamp-3 flex-grow">
-          {project.description}
-        </p>
-        <div className="flex flex-wrap gap-2 pt-2">
-          {project.technologies.map((tech, index) => (
-            <span
-              key={index}
-              className="px-3 py-1 rounded-full border [border-color:var(--border-color)] text-[10px] [color:var(--accent)] font-medium"
-            >
-              {tech}
-            </span>
-          ))}
+      <motion.div
+        style={{ opacity, scale }}
+        className={`flex flex-col ${isEven ? 'lg:flex-row' : 'lg:flex-row-reverse'} items-center gap-12 lg:gap-24 w-full max-w-7xl relative z-10`}
+      >
+        {/* Cinematic Image Container */}
+        <div className="w-full lg:w-3/5 group items-center justify-center flex">
+          <div className="relative w-full aspect-[16/9] rounded-[2rem] md:rounded-[3.5rem] overflow-hidden border border-[color:var(--border-color)] shadow-2xl gpu-accel transition-colors duration-700 group-hover:border-[color:var(--accent)] bg-transparent">
+            <motion.div style={{ y }} className="absolute inset-0 w-full h-full scale-110 gpu-accel">
+              <img
+                src={project.image}
+                alt={project.title}
+                loading="lazy"
+                decoding="async"
+                className={`w-full h-full object-cover ${project.title === "User-Blog Authentication API" ? "scale-[1.6]" : ""
+                  }`}
+              />
+              <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-700" />
+            </motion.div>
+
+            {/* Hover Actions */}
+            <div className="absolute inset-0 bg-gradient-to-tr from-[var(--bg-primary)]/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center backdrop-blur-[2px] will-change-[opacity]">
+              <motion.a
+                href={project.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                className="flex items-center gap-3 px-8 py-4 bg-white text-black rounded-full font-bold text-lg shadow-2xl"
+              >
+                <FaGithub className="text-2xl" />
+                <span>View Source</span>
+              </motion.a>
+            </div>
+          </div>
         </div>
-      </div>
-    </motion.div>
+
+        {/* Narrative Content */}
+        <div className={`w-full lg:w-2/5 space-y-8 text-center ${isEven ? 'lg:text-left' : 'lg:text-right'}`}>
+          <div className="space-y-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              <h3 className="text-3xl md:text-5xl font-black [color:var(--text-primary)] tracking-tighter leading-none mb-2">
+                {project.title}
+              </h3>
+              <div className={`h-1.5 w-20 [background-color:var(--accent)] rounded-full mx-auto ${isEven ? 'lg:ml-0' : 'lg:mr-0'}`} />
+            </motion.div>
+
+            <motion.p
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 0.7 }}
+              className="text-lg md:text-xl leading-relaxed [color:var(--text-secondary)] font-light"
+            >
+              {project.description}
+            </motion.p>
+          </div>
+
+          <div className={`flex flex-wrap gap-2 justify-center ${isEven ? 'lg:justify-start' : 'lg:justify-end'}`}>
+            {project.technologies.map((tech, i) => (
+              <span key={i} className="px-4 py-2 text-xs font-bold tracking-widest uppercase rounded-full border border-[color:var(--border-color)] [color:var(--text-primary)] bg-white/5 backdrop-blur-md">
+                {tech}
+              </span>
+            ))}
+          </div>
+        </div>
+      </motion.div>
+    </div>
   )
-}
+})
 
 const Projects = () => {
-  const scrollRef = useRef(null)
-  const [isInteracting, setIsInteracting] = useState(false)
-  const animationRef = useRef(null)
-  const autoScrollSpeed = 0.5 // pixels per frame
-
-  const duplicatedProjects = [...PROJECTS, ...PROJECTS, ...PROJECTS]
-
-  const animate = useCallback(() => {
-    if (!scrollRef.current || isInteracting) return
-
-    const container = scrollRef.current
-    container.scrollLeft += autoScrollSpeed
-
-    // Seamless loop: check if we've scrolled past one-third of the total width
-    const oneThirdWidth = container.scrollWidth / 3
-    if (container.scrollLeft >= oneThirdWidth * 2) {
-      container.scrollLeft = oneThirdWidth
-    } else if (container.scrollLeft <= 0) {
-      container.scrollLeft = oneThirdWidth
-    }
-
-    animationRef.current = requestAnimationFrame(animate)
-  }, [isInteracting])
-
-  useEffect(() => {
-    // Start at the middle set for seamless initial scroll in both directions
-    if (scrollRef.current) {
-      scrollRef.current.scrollLeft = scrollRef.current.scrollWidth / 3
-    }
-
-    animationRef.current = requestAnimationFrame(animate)
-    return () => cancelAnimationFrame(animationRef.current)
-  }, [animate])
-
-  // Mouse handlers for desktop dragging
-  const [startX, setStartX] = useState(0)
-  const [scrollLeft, setScrollLeft] = useState(0)
-
-  const handleMouseDown = (e) => {
-    setIsInteracting(true)
-    setStartX(e.pageX - scrollRef.current.offsetLeft)
-    setScrollLeft(scrollRef.current.scrollLeft)
-  }
-
-  const handleMouseMove = (e) => {
-    if (!isInteracting) return
-    e.preventDefault()
-    const x = e.pageX - scrollRef.current.offsetLeft
-    const walk = (x - startX) * 1.5
-    scrollRef.current.scrollLeft = scrollLeft - walk
-  }
-
-  const handleMouseUp = () => setIsInteracting(false)
-  const handleMouseLeave = () => setIsInteracting(false)
-
-  // Touch handlers for mobile
-  const handleTouchStart = () => setIsInteracting(true)
-  const handleTouchEnd = () => setIsInteracting(false)
-
   return (
-    <div className="py-24 overflow-hidden">
-      <motion.h2
-        whileInView={{ opacity: 1, y: 0 }}
-        initial={{ opacity: 0, y: -50 }}
-        viewport={{ once: true }}
-        transition={{ duration: 1 }}
-        className="mb-16 text-center text-4xl lg:text-5xl font-bold [color:var(--text-primary)]"
-      >
-        Personal <span className="[color:var(--accent)]">Projects</span>
-      </motion.h2>
-
-      <div
-        ref={scrollRef}
-        className={`flex items-stretch gap-6 md:gap-8 overflow-x-auto pb-12 scrollbar-hide px-4 ${isInteracting ? 'cursor-grabbing' : 'cursor-grab'
-          }`}
-        style={{
-          scrollBehavior: 'auto', // Always use auto for programmatic animation to avoid judder
-          willChange: 'scroll-position' // Hint to browser for optimization
-        }}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        onMouseLeave={handleMouseLeave}
-        onTouchStart={handleTouchStart}
-        onTouchEnd={handleTouchEnd}
-        onMouseEnter={() => setIsInteracting(true)}
-      >
-        {duplicatedProjects.map((project, index) => (
-          <div key={index} className="flex h-[500px] md:h-[550px] lg:h-[600px]">
-            <ProjectCard project={project} />
-          </div>
-        ))}
+    <div className="relative pt-32 pb-64 overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 mb-32 relative text-center">
+        <motion.h2
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-5xl md:text-8xl font-black tracking-tightest [color:var(--text-primary)]"
+        >
+          Chosen <span className="[color:var(--accent)]">Work</span>
+        </motion.h2>
+        <p className="mt-4 text-lg md:text-xl [color:var(--text-secondary)] opacity-50 uppercase tracking-[0.5em] font-medium">Selected Personal Endeavors</p>
       </div>
 
-      <p className="text-center text-xs [color:var(--text-secondary)] opacity-50 mt-4">
-        Drag or swipe to explore • Auto-scroll resumes on release
-      </p>
+      <div className="space-y-[10vh] md:space-y-[0vh]">
+        {PROJECTS.map((project, index) => (
+          <ProjectItem key={index} project={project} index={index} />
+        ))}
+      </div>
     </div>
   )
 }

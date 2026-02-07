@@ -83,7 +83,7 @@ const App = () => {
 
       {/* Progress Bar */}
       <motion.div
-        className="fixed top-0 left-0 right-0 h-1 [background-color:var(--accent)] origin-left z-[100]"
+        className="fixed top-0 left-0 right-0 h-1 [background-color:var(--accent)] origin-left z-[100] will-change-transform"
         style={{ scaleX }}
       />
 
@@ -159,9 +159,9 @@ const App = () => {
             <Contact />
           </motion.section>
         </div>
-
-        <Footer />
       </div>
+
+      <Footer />
 
       <ScrollToTop />
       <SectionNav />

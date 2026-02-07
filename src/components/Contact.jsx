@@ -103,7 +103,7 @@ const Contact = () => {
 
           <div className="space-y-6">
             <div className="flex items-center gap-6 group cursor-none">
-              <div className="h-12 w-12 rounded-2xl [background-color:var(--bg-secondary)] border [border-color:var(--border-color)] flex items-center justify-center [color:var(--accent)] group-hover:border-[color:var(--accent)] group-hover:bg-[color:color-mix(in_srgb,var(--accent),transparent_90%)] transition-all duration-500">
+              <div className="h-12 w-12 rounded-2xl [background-color:var(--bg-secondary)] border [border-color:var(--border-color)] flex items-center justify-center [color:var(--accent)] group-hover:border-[color:var(--accent)] group-hover:bg-[color:color-mix(in_srgb,var(--accent),transparent_90%)] transition-colors duration-500">
                 <FaMapMarkerAlt className="text-xl" />
               </div>
               <div>
@@ -114,7 +114,7 @@ const Contact = () => {
 
             <CopyButton value={CONTACT.phoneNo} label="Phone">
               <div className="flex items-center gap-6 group cursor-none">
-                <div className="h-12 w-12 rounded-2xl [background-color:var(--bg-secondary)] border [border-color:var(--border-color)] flex items-center justify-center [color:var(--accent)] group-hover:border-[color:var(--accent)] group-hover:bg-[color:color-mix(in_srgb,var(--accent),transparent_90%)] transition-all duration-500">
+                <div className="h-12 w-12 rounded-2xl [background-color:var(--bg-secondary)] border [border-color:var(--border-color)] flex items-center justify-center [color:var(--accent)] group-hover:border-[color:var(--accent)] group-hover:bg-[color:color-mix(in_srgb,var(--accent),transparent_90%)] transition-colors duration-500">
                   <FaPhoneAlt className="text-xl" />
                 </div>
                 <div>
@@ -126,7 +126,7 @@ const Contact = () => {
 
             <CopyButton value={CONTACT.email} label="Email">
               <div className="flex items-center gap-6 group cursor-none">
-                <div className="h-12 w-12 rounded-2xl [background-color:var(--bg-secondary)] border [border-color:var(--border-color)] flex items-center justify-center [color:var(--accent)] group-hover:border-[color:var(--accent)] group-hover:bg-[color:color-mix(in_srgb,var(--accent),transparent_90%)] transition-all duration-500">
+                <div className="h-12 w-12 rounded-2xl [background-color:var(--bg-secondary)] border [border-color:var(--border-color)] flex items-center justify-center [color:var(--accent)] group-hover:border-[color:var(--accent)] group-hover:bg-[color:color-mix(in_srgb,var(--accent),transparent_90%)] transition-colors duration-500">
                   <FaEnvelope className="text-xl" />
                 </div>
                 <div>
@@ -156,7 +156,7 @@ const Contact = () => {
                   name="user_name"
                   required
                   placeholder="John Doe"
-                  className="w-full [background-color:var(--bg-secondary)] border [border-color:var(--border-color)] rounded-2xl px-6 py-4 outline-none focus:border-[color:var(--accent)] focus:bg-[color:color-mix(in_srgb,var(--accent),transparent_95%)] transition-all [color:var(--text-primary)] placeholder:opacity-30"
+                  className="w-full [background-color:var(--bg-secondary)] border [border-color:var(--border-color)] rounded-2xl px-6 py-4 outline-none focus:border-[color:var(--accent)] focus:bg-[color:color-mix(in_srgb,var(--accent),transparent_95%)] transition-colors [color:var(--text-primary)] placeholder:opacity-30"
                 />
               </div>
               <div className="space-y-2">
@@ -166,7 +166,7 @@ const Contact = () => {
                   name="user_email"
                   required
                   placeholder="john@example.com"
-                  className="w-full [background-color:var(--bg-secondary)] border [border-color:var(--border-color)] rounded-2xl px-6 py-4 outline-none focus:border-[color:var(--accent)] focus:bg-[color:color-mix(in_srgb,var(--accent),transparent_95%)] transition-all [color:var(--text-primary)] placeholder:opacity-30"
+                  className="w-full [background-color:var(--bg-secondary)] border [border-color:var(--border-color)] rounded-2xl px-6 py-4 outline-none focus:border-[color:var(--accent)] focus:bg-[color:color-mix(in_srgb,var(--accent),transparent_95%)] transition-colors [color:var(--text-primary)] placeholder:opacity-30"
                 />
               </div>
             </div>
@@ -178,7 +178,7 @@ const Contact = () => {
                 required
                 rows="5"
                 placeholder="Tell me about your project..."
-                className="w-full [background-color:var(--bg-secondary)] border [border-color:var(--border-color)] rounded-3xl px-6 py-4 outline-none focus:border-[color:var(--accent)] focus:bg-[color:color-mix(in_srgb,var(--accent),transparent_95%)] transition-all [color:var(--text-primary)] placeholder:opacity-30 resize-none"
+                className="w-full [background-color:var(--bg-secondary)] border [border-color:var(--border-color)] rounded-3xl px-6 py-4 outline-none focus:border-[color:var(--accent)] focus:bg-[color:color-mix(in_srgb,var(--accent),transparent_95%)] transition-colors [color:var(--text-primary)] placeholder:opacity-30 resize-none"
               />
             </div>
 
@@ -187,7 +187,7 @@ const Contact = () => {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full lg:w-auto px-10 py-4 [background-color:var(--accent)] hover:opacity-90 text-white rounded-full font-bold flex items-center justify-center gap-3 transition-all shadow-xl disabled:opacity-50 disabled:cursor-not-allowed group"
+                  className="w-full lg:w-auto px-10 py-4 [background-color:var(--accent)] hover:opacity-90 text-white rounded-full font-bold flex items-center justify-center gap-3 transition-[opacity,transform] shadow-xl disabled:opacity-50 disabled:cursor-not-allowed group"
                 >
                   {isSubmitting ? "Sending..." : isSuccess ? "Message Sent!" : "Send Message"}
                   {!isSubmitting && !isSuccess && <FaPaperPlane className="text-sm group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />}
