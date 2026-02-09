@@ -38,7 +38,7 @@ const Navbar = ({ onTerminalToggle }) => {
 
           <div className="hidden md:flex items-center gap-2">
             <Magnetic>
-              <a href="https://www.linkedin.com/in/tanmoy-dednath" target="blank" rel="noopener noreferrer" aria-label="LinkedIn"
+              <a href="https://www.linkedin.com/in/tanmoy-debnath" target="blank" rel="noopener noreferrer" aria-label="LinkedIn"
                 className="p-2 [color:var(--text-secondary)] hover:[color:var(--accent)] rounded-full transition-colors duration-300">
                 <FaLinkedin className="text-2xl" />
               </a>

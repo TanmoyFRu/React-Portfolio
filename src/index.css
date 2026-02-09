@@ -1,11 +1,31 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@100..800&display=swap');
+
+@font-face {
+  font-family: "BL Melody";
+  src: url("./assets/fonts/BLMelody-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "BL Melody";
+  src: url("./assets/fonts/BLMelody-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  font-family: "Inter", sans-serif;
+  --font-body: "BL Melody", system-ui, sans-serif;
+  --font-display: "BL Melody", "Sora", sans-serif;
+  --font-name: "BL Melody", "Sora", sans-serif;
+  font-family: var(--font-body);
 
   /* Midnight Theme (Refined) */
   --bg-primary: #0a0a0a;
@@ -17,6 +37,13 @@
   --border-color: rgba(63, 63, 70, 0.4);
   --selection-bg: rgba(99, 102, 241, 0.3);
   --selection-text: #c7d2fe;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
 }
 
 [data-theme="solar"] {
@@ -63,19 +90,6 @@ body {
   color: var(--text-primary);
   transition: background-color 0.5s ease, color 0.5s ease;
   overflow-x: hidden;
-  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='%236366f1' d='M5.5 3.21V20.8l5.56-5.57h7.43L5.5 3.21z'/%3E%3Cpath fill='%23ffffff' stroke='%236366f1' stroke-width='1' d='M6.5 5.5v12l4-4h5z'/%3E%3C/svg%3E") 0 0, auto;
-}
-
-[data-theme="solar"] body {
-  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='%23f59e0b' d='M5.5 3.21V20.8l5.56-5.57h7.43L5.5 3.21z'/%3E%3Cpath fill='%231c1917' stroke='%23f59e0b' stroke-width='1' d='M6.5 5.5v12l4-4h5z'/%3E%3C/svg%3E") 0 0, auto;
-}
-
-[data-theme="cosmic"] body {
-  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='%23a855f7' d='M5.5 3.21V20.8l5.56-5.57h7.43L5.5 3.21z'/%3E%3Cpath fill='%23f8fafc' stroke='%23a855f7' stroke-width='1' d='M6.5 5.5v12l4-4h5z'/%3E%3C/svg%3E") 0 0, auto;
-}
-
-[data-theme="emerald"] body {
-  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='%2310b981' d='M5.5 3.21V20.8l5.56-5.57h7.43L5.5 3.21z'/%3E%3Cpath fill='%23ecfdf5' stroke='%2310b981' stroke-width='1' d='M6.5 5.5v12l4-4h5z'/%3E%3C/svg%3E") 0 0, auto;
 }
 
 html {
@@ -286,5 +300,37 @@ html {
 .blur-optimized {
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  /* Ensure this doesn't clip unless needed */
+}
+
+/* GSAP Utilities */
+.gsap-reveal-container {
+  opacity: 1;
+  /* Initial state handled by GSAP */
+  will-change: transform, opacity;
+}
+
+.glow-btn {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.glow-btn::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: var(--accent);
+  border-radius: inherit;
+  z-index: -1;
+  opacity: 0;
+  filter: blur(8px);
+  transition: opacity 0.3s ease;
+}
+
+.glow-btn:hover::after {
+  opacity: 0.4;
+}
+
+.glow-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 20px var(--accent-glow);
 }

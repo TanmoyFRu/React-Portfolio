@@ -13,6 +13,7 @@ import ScrollToTop from "./components/ScrollToTop"
 import Footer from "./components/Footer"
 import SplashScreen from "./components/SplashScreen"
 import SectionNav from "./components/SectionNav"
+import ErrorBoundary from "./components/ErrorBoundary"
 import Lenis from "lenis"
 import { motion, AnimatePresence, useScroll, useSpring } from "framer-motion"
 import { FaTerminal } from "react-icons/fa"
@@ -30,12 +31,11 @@ const App = () => {
   });
 
   useEffect(() => {
-    // Disable smooth scroll on mobile for performance
     const isMobile = window.innerWidth < 768 || 'ontouchstart' in window;
     if (isMobile) return;
 
     const lenis = new Lenis({
-      lerp: 0.1, // Lighter than duration-based
+      lerp: 0.1,
       smoothWheel: true,
       wheelMultiplier: 1,
       touchMultiplier: 1.5,
@@ -52,7 +52,6 @@ const App = () => {
   }, [])
 
   useEffect(() => {
-    // Keyboard shortcut for Terminal (`)
     const handleKeyDown = (e) => {
       if (e.key === "`" || e.key === "tilde") {
         e.preventDefault()
@@ -75,99 +74,93 @@ const App = () => {
   }
 
   return (
-    <div className="overflow-x-hidden antialiased selection:bg-indigo-500/30 selection:text-indigo-200 lg:cursor-none">
-      {isLoading && <SplashScreen onComplete={() => setIsLoading(false)} />}
+    <ErrorBoundary>
+      <div className="overflow-x-hidden antialiased selection:bg-indigo-500/30 selection:text-indigo-200 lg:cursor-none">
+        <a href="#about" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[200] focus:px-4 focus:py-2 focus:bg-[var(--accent)] focus:text-white focus:rounded-lg">
+          Skip to main content
+        </a>
+        {isLoading && <SplashScreen onComplete={() => setIsLoading(false)} />}
 
-      <CustomCursor />
-      <Noise />
+        <CustomCursor />
+        <Noise />
 
-      {/* Progress Bar */}
-      <motion.div
-        className="fixed top-0 left-0 right-0 h-1 [background-color:var(--accent)] origin-left z-[100] will-change-transform"
-        style={{ scaleX }}
-      />
+        {/* Progress Bar */}
+        <motion.div
+          className="fixed top-0 left-0 right-0 h-1 [background-color:var(--accent)] origin-left z-[100] will-change-transform"
+          style={{ scaleX }}
+        />
 
-      <div className="fixed inset-0 -z-10 bg-radial-gradient h-full w-full" />
+        <div className="fixed inset-0 -z-10 bg-radial-gradient h-full w-full" />
 
-      <div className="container mx-auto">
-        <Navbar onTerminalToggle={() => setIsTerminalOpen(true)} />
+        <div className="container mx-auto">
+          <Navbar onTerminalToggle={() => setIsTerminalOpen(true)} />
 
-        <div className="px-8">
-          <div id="hero">
-            <Hero />
+          <div className="px-8">
+            <div id="hero">
+              <Hero />
+            </div>
+
+            <motion.section
+              id="about"
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-50px" }}
+              variants={sectionVariants}
+            >
+              <About />
+            </motion.section>
+
+            <motion.section
+              id="technologies"
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-50px" }}
+              variants={sectionVariants}
+            >
+              <Technologies />
+            </motion.section>
+
+            <section id="experience">
+              <Experience />
+            </section>
+
+            <section id="education">
+              <Education />
+            </section>
           </div>
 
-          <motion.section
-            id="about"
+          <motion.div
+            id="projects"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
             variants={sectionVariants}
+            className="w-full"
           >
-            <About />
-          </motion.section>
+            <Projects />
+          </motion.div>
 
-          <motion.section
-            id="technologies"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            variants={sectionVariants}
-          >
-            <Technologies />
-          </motion.section>
-
-          <motion.section
-            id="experience"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            variants={sectionVariants}
-          >
-            <Experience />
-          </motion.section>
-
-          <motion.section
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            variants={sectionVariants}
-          >
-            <Education />
-          </motion.section>
+          <div className="px-8">
+            <motion.section
+              id="contact"
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              variants={sectionVariants}
+            >
+              <Contact />
+            </motion.section>
+          </div>
         </div>
 
-        <motion.div
-          id="projects"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          variants={sectionVariants}
-          className="w-full"
-        >
-          <Projects />
-        </motion.div>
+        <Footer />
 
-        <div className="px-8">
-          <motion.section
-            id="contact"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            variants={sectionVariants}
-          >
-            <Contact />
-          </motion.section>
-        </div>
+        <ScrollToTop />
+        <SectionNav />
+
+        <Terminal isOpen={isTerminalOpen} onClose={() => setIsTerminalOpen(false)} />
       </div>
-
-      <Footer />
-
-      <ScrollToTop />
-      <SectionNav />
-
-      <Terminal isOpen={isTerminalOpen} onClose={() => setIsTerminalOpen(false)} />
-    </div>
+    </ErrorBoundary>
   )
 }
 

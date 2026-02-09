@@ -1,102 +1,138 @@
 import { EDUCATION } from "../constants"
 import { motion } from "framer-motion"
-import { FaGraduationCap } from "react-icons/fa"
-import { memo } from "react"
+import { memo, useRef } from "react"
+import { DESIGN_CONFIG } from "../constants/design"
+import GsapReveal from "./GsapReveal"
+import gsap from "gsap"
+import { ScrollTrigger } from "gsap/ScrollTrigger"
+import { useGSAP } from "@gsap/react"
 
-const Education = () => {
-    const isSingle = EDUCATION.length === 1;
+gsap.registerPlugin(ScrollTrigger)
+
+const TimelinePath = ({ containerRef }) => {
+    const lineRef = useRef(null)
+
+    useGSAP(() => {
+        if (!lineRef.current) return
+
+        gsap.fromTo(lineRef.current, {
+            scaleY: 0,
+            transformOrigin: "top",
+        }, {
+            scaleY: 1,
+            ease: "none",
+            scrollTrigger: {
+                trigger: containerRef.current,
+                start: "top 20%",
+                end: "bottom 80%",
+                scrub: 0.5,
+            }
+        })
+    }, { scope: containerRef })
 
     return (
-        <div className="pb-32 px-4 md:px-8">
-            <motion.h2
-                whileInView={{ opacity: 1, y: 0 }}
-                initial={{ opacity: 0, y: -50 }}
-                viewport={{ once: true }}
-                transition={{ duration: 1 }}
-                className="my-20 text-center text-4xl lg:text-5xl font-bold tracking-tight [color:var(--text-primary)]"
-            >
-                Education<span className="[color:var(--text-secondary)] opacity-40">.</span>
-            </motion.h2>
+        <div className="absolute left-10 md:left-1/2 top-0 bottom-0 w-[2px] bg-[var(--border-color)]/30 overflow-hidden">
+            <div
+                ref={lineRef}
+                className="w-full h-full bg-gradient-to-b from-[var(--accent)] via-[var(--accent)] to-transparent shadow-[0_0_10px_var(--accent)]"
+            />
+        </div>
+    )
+}
 
-            <div className="max-w-6xl mx-auto">
-                <div className={`grid grid-cols-1 ${isSingle ? 'lg:grid-cols-12' : 'md:grid-cols-2 lg:grid-cols-3'} gap-8 md:gap-12 items-center`}>
-                    {EDUCATION.map((edu, index) => (
-                        <motion.div
-                            key={index}
-                            whileInView={{ opacity: 1, scale: 1 }}
-                            initial={{ opacity: 0, scale: 0.95 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.6, delay: index * 0.1 }}
-                            className={`relative group ${isSingle ? 'lg:col-span-8 lg:col-start-1' : 'lg:col-span-2'} gpu-accel`}
-                        >
-                            <div className="relative h-full p-6 md:p-10 lg:p-16 rounded-3xl md:rounded-[3rem] border border-[color:var(--border-color)] [background-color:rgba(var(--bg-secondary),0.1)] blur-optimized hover:border-[color:var(--accent)] transition-[border-color,box-shadow] duration-700 group-hover:shadow-[0_0_40px_var(--accent-glow)] overflow-hidden">
+const AcademicCard = ({ edu, index }) => {
+    const isEven = index % 2 === 0
 
-                                {/* Minimalist Credential Layout */}
-                                <div className="absolute top-0 right-0 p-6 md:p-12 opacity-10 group-hover:opacity-20 transition-opacity">
-                                    <FaGraduationCap className="text-7xl md:text-9xl [color:var(--accent)] rotate-12" />
-                                </div>
+    return (
+        <div className={`relative flex flex-col md:flex-row items-start justify-between mb-16 md:mb-24 w-full ${isEven ? 'md:flex-row-reverse' : ''}`}>
+            {/* Logo Marker on Timeline */}
+            <GsapReveal y={30} delay={index * 0.1} className="absolute left-10 md:left-1/2 md:ml-[-24px] top-6 z-20">
+                <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-white border-2 border-[var(--accent)] shadow-[0_0_20px_rgba(var(--accent-rgb),0.2)] flex items-center justify-center p-0 backdrop-blur-3xl transform -translate-x-1/2 md:translate-x-0 group hover:scale-110 transition-transform duration-500 overflow-hidden">
+                    <img
+                        src={edu.logo}
+                        alt={edu.institution}
+                        className="w-full h-full object-contain transition-all duration-500"
+                    />
+                </div>
+            </GsapReveal>
 
-                                <div className="relative z-10 flex flex-col md:flex-row gap-8 md:gap-12 items-start">
-                                    {/* Circular Logo - Matching Experience Style */}
-                                    <div className="relative group/logo flex-shrink-0">
-                                        <motion.div
-                                            whileHover={{ scale: 1.15, rotate: 5 }}
-                                            className="w-[60px] h-[60px] md:w-[90px] md:h-[90px] rounded-full border-2 md:border-4 [border-color:var(--accent)] overflow-hidden flex items-center justify-center transition-[transform,border-width] duration-500 hover:border-[4px] md:hover:border-[6px] cursor-pointer bg-white/5"
-                                            style={{ boxShadow: '0 0 20px var(--accent-glow), 0 0 5px var(--accent)' }}
-                                        >
-                                            <img
-                                                src={edu.logo}
-                                                alt={edu.institution}
-                                                className="w-full h-full object-cover group-hover/logo:scale-110 transition-transform duration-500"
-                                                loading="lazy"
-                                                decoding="async"
-                                            />
-                                        </motion.div>
-                                        {/* Graduation Cap Badge */}
-                                        <div className="absolute -bottom-1 -right-1 h-5 w-5 md:h-8 md:w-8 rounded-full [background-color:var(--accent)] flex items-center justify-center shadow-lg border-2 border-[var(--bg-primary)]">
-                                            <FaGraduationCap className="text-[10px] md:text-[14px] text-white" />
-                                        </div>
-                                    </div>
-
-                                    <div className="flex-1 space-y-4 md:space-y-6">
-                                        <div className="space-y-2">
-                                            <span className="text-[10px] md:text-xs font-bold [color:var(--accent)] tracking-widest uppercase [background-color:rgba(var(--accent),0.1)] px-4 py-1.5 rounded-full border [border-color:rgba(var(--accent),0.2)] mb-4 inline-block">
-                                                {edu.year}
-                                            </span>
-                                            <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold [color:var(--text-primary)] group-hover:[color:var(--accent)] transition-colors leading-tight">
-                                                {edu.degree}
-                                            </h3>
-                                            <p className="text-lg md:text-xl [color:var(--text-secondary)] font-medium opacity-80">
-                                                {edu.institution}
-                                            </p>
-                                        </div>
-
-                                        <p className="max-w-2xl text-base md:text-lg leading-relaxed [color:var(--text-secondary)] font-light opacity-70 italic">
-                                            {edu.description}
-                                        </p>
-                                    </div>
-                                </div>
-
-                                {/* Decorative Elements */}
-                                <div className="absolute -bottom-20 -left-20 w-80 h-80 [background-color:var(--accent)] opacity-5 rounded-full blur-[100px] group-hover:opacity-10 transition-opacity duration-1000" />
-                            </div>
-                        </motion.div>
-                    ))}
-
-                    {/* Dynamic Quote Card */}
+            {/* Content Card */}
+            <div className={`w-full md:w-[45%] pl-20 md:pl-0 text-left ${isEven ? 'md:text-left' : 'md:text-right'}`}>
+                <GsapReveal y={30} delay={index * 0.1}>
                     <motion.div
-                        whileInView={{ opacity: 1, x: 0 }}
-                        initial={{ opacity: 0, x: 20 }}
-                        viewport={{ once: true }}
-                        className={`${isSingle ? 'lg:col-span-4' : 'hidden lg:flex'} flex flex-col justify-center p-10 rounded-[2.5rem] border border-[color:var(--border-color)] [background-color:var(--bg-secondary)] opacity-40 hover:opacity-100 transition-opacity h-full min-h-[250px] gpu-accel`}
+                        whileHover={{ y: -5 }}
+                        className="p-1 rounded-3xl bg-gradient-to-br from-[var(--border-color)]/50 to-transparent hover:from-[var(--accent)]/50 transition-all duration-500 group"
                     >
-                        <h4 className="text-xl font-bold [color:var(--text-primary)] mb-6 italic font-serif leading-relaxed">"Commitment to continuous learning and technical excellence."</h4>
-                        <div className="h-[2px] w-12 [background-color:var(--accent)] rounded-full mb-4" />
-                        <p className="text-xs uppercase tracking-[0.3em] [color:var(--text-secondary)] opacity-50">Philosophy</p>
+                        <div className="bg-[var(--bg-secondary)]/90 backdrop-blur-xl p-8 rounded-[1.4rem] border border-[var(--border-color)] group-hover:border-[var(--accent)]/50 transition-colors">
+                            {/* Header (No Logo here anymore) */}
+                            <div className={`flex flex-col gap-2 mb-6 ${isEven ? 'items-start' : 'md:items-end items-start'}`}>
+                                <h3 className={`font-bold [color:var(--text-primary)] group-hover:[color:var(--accent)] transition-colors ${DESIGN_CONFIG.HEADERS.H3}`}>
+                                    {edu.institution}
+                                </h3>
+                                <div className="flex items-center gap-3">
+                                    <span className="text-[10px] font-black tracking-widest text-[var(--accent)] uppercase opacity-80">
+                                        {edu.year}
+                                    </span>
+                                </div>
+                                <h4 className="text-lg md:text-xl font-semibold [color:var(--text-primary)] opacity-90 mt-2">
+                                    {edu.degree}
+                                </h4>
+                            </div>
+
+                            {/* Description */}
+                            <p className={`text-sm md:text-base leading-relaxed [color:var(--text-secondary)] opacity-70 mb-8 ${isEven ? 'text-left' : 'md:text-right text-left'}`}>
+                                {edu.description}
+                            </p>
+
+                            {/* Focus Areas List */}
+                            <ul className={`space-y-4 mb-8 ${isEven ? 'text-left' : 'md:text-right text-left'}`}>
+                                {edu.focusAreas.map((focus, i) => (
+                                    <li key={i} className={`flex gap-3 text-sm md:text-base leading-relaxed [color:var(--text-secondary)] opacity-70 group-hover:opacity-100 transition-opacity ${isEven ? 'items-start' : 'md:flex-row-reverse items-start'}`}>
+                                        <span className="mt-2 w-1.5 h-1.5 rounded-full bg-[var(--accent)] shrink-0 shadow-[0_0_5px_var(--accent)]" />
+                                        <span>{focus}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
                     </motion.div>
+                </GsapReveal>
+            </div>
+
+            {/* Spacer for the other side */}
+            <div className="hidden md:block w-[45%]" />
+        </div>
+    )
+}
+
+const Education = () => {
+    const containerRef = useRef(null)
+
+    // Ensure ScrollTrigger refreshes when component mounts to fix "not loading" issues
+    useGSAP(() => {
+        ScrollTrigger.refresh()
+    }, { scope: containerRef })
+
+    return (
+        <section id="education" ref={containerRef} className="relative py-24 border-t [border-color:var(--border-color)] overflow-hidden">
+            <GsapReveal y={50}>
+                <h2 className={`mb-24 text-center [color:var(--text-primary)] ${DESIGN_CONFIG.HEADERS.H2}`}>
+                    My Education
+                </h2>
+            </GsapReveal>
+
+            <div className="max-w-7xl mx-auto px-6 relative">
+                <TimelinePath containerRef={containerRef} />
+
+                <div className="relative">
+                    {EDUCATION.map((edu, index) => (
+                        <AcademicCard key={index} edu={edu} index={index} />
+                    ))}
                 </div>
             </div>
-        </div>
+
+            {/* Background Texture */}
+            <div className="absolute inset-0 opacity-[0.01] pointer-events-none" style={{ backgroundImage: `radial-gradient(var(--accent) 0.5px, transparent 0.5px)`, backgroundSize: '30px 30px' }} />
+        </section>
     )
 }
 

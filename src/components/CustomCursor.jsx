@@ -4,7 +4,7 @@ import { motion, useSpring, useMotionValue } from "framer-motion";
 const CustomCursor = () => {
     const [isHovered, setIsHovered] = useState(false);
     const [isClicked, setIsClicked] = useState(false);
-    const [isMobile, setIsMobile] = useState(true); // Default to true to avoid flash
+    const [isMobile, setIsMobile] = useState(false); // Default to false
     const cursorX = useMotionValue(-100);
     const cursorY = useMotionValue(-100);
     const rafRef = useRef(null);
@@ -18,10 +18,10 @@ const CustomCursor = () => {
     useEffect(() => {
         // Check if mobile/touch device
         const checkMobile = () => {
-            const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
             const isSmallScreen = window.innerWidth < 1024;
-            setIsMobile(isTouchDevice || isSmallScreen);
+            setIsMobile(isSmallScreen);
         };
+
 
         checkMobile();
         window.addEventListener('resize', checkMobile);

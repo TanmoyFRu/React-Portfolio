@@ -5,6 +5,10 @@ import emailjs from "@emailjs/browser"
 import confetti from "canvas-confetti"
 import { FaEnvelope, FaPhoneAlt, FaMapMarkerAlt, FaPaperPlane, FaCheck } from "react-icons/fa"
 import Magnetic from "./Magnetic"
+import { DESIGN_CONFIG } from "../constants/design"
+import GsapReveal from "./GsapReveal"
+
+
 
 const CopyButton = ({ value, children, label }) => {
   const [copied, setCopied] = useState(false)
@@ -75,79 +79,73 @@ const Contact = () => {
 
   return (
     <div className="pb-32 border-t [border-color:var(--border-color)]">
-      <motion.h2
-        whileInView={{ opacity: 1, y: 0 }}
-        initial={{ opacity: 0, y: -50 }}
-        viewport={{ once: true }}
-        transition={{ duration: 1 }}
-        className="my-20 text-center text-4xl lg:text-5xl font-bold tracking-tight [color:var(--text-primary)]"
-      >
-        Get in <span className="[color:var(--accent)]">Touch</span>
-      </motion.h2>
+      <GsapReveal y={50}>
+        <h2
+          className={`my-20 text-center [color:var(--text-primary)] ${DESIGN_CONFIG.HEADERS.H2}`}
+        >
+          Contact Me
+        </h2>
+
+      </GsapReveal>
+
+
 
       <div className="max-w-6xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-2 gap-16">
         {/* Contact Info Column */}
-        <motion.div
-          whileInView={{ opacity: 1, x: 0 }}
-          initial={{ opacity: 0, x: -50 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="flex flex-col justify-center space-y-12"
-        >
-          <div className="space-y-8">
-            <h3 className="text-3xl font-bold [color:var(--text-primary)] tracking-tight">Let's build something <br /><span className="[color:var(--accent)]">extraordinary</span> together.</h3>
-            <p className="[color:var(--text-secondary)] text-lg lg:text-xl font-light leading-relaxed max-w-sm">
-              I'm currently open to new opportunities and collaborations. Feel free to reach out!
-            </p>
-          </div>
+        <GsapReveal x={-50} duration={0.8}>
+          <div className="flex flex-col justify-center space-y-12">
+            <div className="space-y-8">
+              <h3 className={`[color:var(--text-primary)] tracking-tight ${DESIGN_CONFIG.HEADERS.H3}`}>Let's build something <br /><span className="[color:var(--accent)]">extraordinary</span> together.</h3>
 
-          <div className="space-y-6">
-            <div className="flex items-center gap-6 group cursor-none">
-              <div className="h-12 w-12 rounded-2xl [background-color:var(--bg-secondary)] border [border-color:var(--border-color)] flex items-center justify-center [color:var(--accent)] group-hover:border-[color:var(--accent)] group-hover:bg-[color:color-mix(in_srgb,var(--accent),transparent_90%)] transition-colors duration-500">
-                <FaMapMarkerAlt className="text-xl" />
-              </div>
-              <div>
-                <p className="text-xs [color:var(--text-secondary)] uppercase tracking-widest font-bold opacity-60">Location</p>
-                <p className="[color:var(--text-primary)] font-medium">{CONTACT.address}</p>
-              </div>
+              <p className="[color:var(--text-secondary)] text-lg lg:text-xl font-light leading-relaxed max-w-sm">
+                I'm currently open to new opportunities and collaborations. Feel free to reach out!
+              </p>
             </div>
 
-            <CopyButton value={CONTACT.phoneNo} label="Phone">
+            <div className="space-y-6">
               <div className="flex items-center gap-6 group cursor-none">
                 <div className="h-12 w-12 rounded-2xl [background-color:var(--bg-secondary)] border [border-color:var(--border-color)] flex items-center justify-center [color:var(--accent)] group-hover:border-[color:var(--accent)] group-hover:bg-[color:color-mix(in_srgb,var(--accent),transparent_90%)] transition-colors duration-500">
-                  <FaPhoneAlt className="text-xl" />
+                  <FaMapMarkerAlt className="text-xl" />
                 </div>
                 <div>
-                  <p className="text-xs [color:var(--text-secondary)] uppercase tracking-widest font-bold opacity-60">Phone</p>
-                  <p className="[color:var(--text-primary)] font-medium group-hover:[color:var(--accent)] transition-colors">{CONTACT.phoneNo}</p>
+                  <p className="text-xs [color:var(--text-secondary)] uppercase tracking-widest font-bold opacity-60">Location</p>
+                  <p className="[color:var(--text-primary)] font-medium">{CONTACT.address}</p>
                 </div>
               </div>
-            </CopyButton>
 
-            <CopyButton value={CONTACT.email} label="Email">
-              <div className="flex items-center gap-6 group cursor-none">
-                <div className="h-12 w-12 rounded-2xl [background-color:var(--bg-secondary)] border [border-color:var(--border-color)] flex items-center justify-center [color:var(--accent)] group-hover:border-[color:var(--accent)] group-hover:bg-[color:color-mix(in_srgb,var(--accent),transparent_90%)] transition-colors duration-500">
-                  <FaEnvelope className="text-xl" />
+              <CopyButton value={CONTACT.phoneNo} label="Phone">
+                <div className="flex items-center gap-6 group cursor-none">
+                  <div className="h-12 w-12 rounded-2xl [background-color:var(--bg-secondary)] border [border-color:var(--border-color)] flex items-center justify-center [color:var(--accent)] group-hover:border-[color:var(--accent)] group-hover:bg-[color:color-mix(in_srgb,var(--accent),transparent_90%)] transition-colors duration-500">
+                    <FaPhoneAlt className="text-xl" />
+                  </div>
+                  <div>
+                    <p className="text-xs [color:var(--text-secondary)] uppercase tracking-widest font-bold opacity-60">Phone</p>
+                    <p className="[color:var(--text-primary)] font-medium group-hover:[color:var(--accent)] transition-colors">{CONTACT.phoneNo}</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-xs [color:var(--text-secondary)] uppercase tracking-widest font-bold opacity-60">Email</p>
-                  <p className="[color:var(--text-primary)] font-medium group-hover:[color:var(--accent)] transition-colors">
-                    {CONTACT.email}
-                  </p>
+              </CopyButton>
+
+              <CopyButton value={CONTACT.email} label="Email">
+                <div className="flex items-center gap-6 group cursor-none">
+                  <div className="h-12 w-12 rounded-2xl [background-color:var(--bg-secondary)] border [border-color:var(--border-color)] flex items-center justify-center [color:var(--accent)] group-hover:border-[color:var(--accent)] group-hover:bg-[color:color-mix(in_srgb,var(--accent),transparent_90%)] transition-colors duration-500">
+                    <FaEnvelope className="text-xl" />
+                  </div>
+                  <div>
+                    <p className="text-xs [color:var(--text-secondary)] uppercase tracking-widest font-bold opacity-60">Email</p>
+                    <p className="[color:var(--text-primary)] font-medium group-hover:[color:var(--accent)] transition-colors">
+                      {CONTACT.email}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </CopyButton>
+              </CopyButton>
+            </div>
           </div>
-        </motion.div>
+        </GsapReveal>
 
-        {/* Contact Form Column */}
-        <motion.div
-          whileInView={{ opacity: 1, x: 0 }}
-          initial={{ opacity: 0, x: 50 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-        >
+
+        <GsapReveal x={50} duration={0.8}>
           <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
                 <label className="text-xs font-bold [color:var(--text-secondary)] uppercase tracking-widest ml-1 opacity-60">Name</label>
@@ -205,7 +203,8 @@ const Contact = () => {
               </motion.p>
             )}
           </form>
-        </motion.div>
+        </GsapReveal>
+
       </div>
     </div>
   )

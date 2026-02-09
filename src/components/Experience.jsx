@@ -1,116 +1,142 @@
 import { EXPERIENCES } from "../constants"
 import { motion } from "framer-motion"
-import { memo } from "react"
+import { memo, useRef } from "react"
+import { DESIGN_CONFIG } from "../constants/design"
+import GsapReveal from "./GsapReveal"
+import gsap from "gsap"
+import { ScrollTrigger } from "gsap/ScrollTrigger"
+import { useGSAP } from "@gsap/react"
 
-const Experience = () => {
-    const isSingle = EXPERIENCES.length === 1;
+gsap.registerPlugin(ScrollTrigger)
+
+const TimelinePath = ({ containerRef }) => {
+    const lineRef = useRef(null)
+
+    useGSAP(() => {
+        if (!lineRef.current) return
+
+        gsap.fromTo(lineRef.current, {
+            scaleY: 0,
+            transformOrigin: "top",
+        }, {
+            scaleY: 1,
+            ease: "none",
+            scrollTrigger: {
+                trigger: containerRef.current,
+                start: "top 20%",
+                end: "bottom 80%",
+                scrub: 0.5,
+            }
+        })
+    }, { scope: containerRef })
 
     return (
-        <div className="pb-32">
-            <motion.h2
-                whileInView={{ opacity: 1, y: 0 }}
-                initial={{ opacity: 0, y: -50 }}
-                viewport={{ once: true }}
-                transition={{ duration: 1 }}
-                className="my-20 text-center text-4xl lg:text-5xl font-bold tracking-tight [color:var(--text-primary)]"
-            >
-                Experience<span className="[color:var(--accent)]">.</span>
-            </motion.h2>
+        <div className="absolute left-10 md:left-1/2 top-0 bottom-0 w-[2px] bg-[var(--border-color)]/30 overflow-hidden">
+            <div
+                ref={lineRef}
+                className="w-full h-full bg-gradient-to-b from-[var(--accent)] via-[var(--accent)] to-transparent shadow-[0_0_10px_var(--accent)]"
+            />
+        </div>
+    )
+}
 
-            <div className={`max-w-${isSingle ? '5xl' : '4xl'} mx-auto px-4 relative`}>
-                {/* Modern Roadmap Line - Only show if multiple items */}
-                {!isSingle && (
-                    <div className="absolute left-4 md:left-1/2 top-10 bottom-0 w-[1px] bg-gradient-to-b from-[var(--accent)] via-[var(--accent-glow)] to-transparent opacity-30 hidden sm:block" />
-                )}
+const ExperienceCard = ({ experience, index }) => {
+    const isEven = index % 2 === 0
 
-                <div className={`space-y-12 ${isSingle ? '' : 'md:space-y-24'}`}>
-                    {EXPERIENCES.map((experience, index) => (
-                        <div key={index} className={`relative flex flex-col ${isSingle ? 'items-center' : 'md:flex-row items-start md:items-center'}`}>
-                            {/* Roadmap Node with Logo - Centered for single, Alternating for multiple */}
-                            {!isSingle && (
-                                <div className="absolute left-1/2 ml-[-25px] z-10 group/logo hidden md:block gpu-accel">
-                                    <motion.div
-                                        initial={{ scale: 0 }}
-                                        whileInView={{ scale: 1 }}
-                                        viewport={{ once: true }}
-                                        whileHover={{ scale: 1.15, rotate: 5 }}
-                                        className="w-[50px] h-[50px] rounded-full border-4 [border-color:var(--accent)] overflow-hidden flex items-center justify-center transition-[transform,border-width] duration-500 hover:border-[6px] cursor-pointer"
-                                        style={{ boxShadow: '0 0 15px var(--accent-glow), 0 0 3px var(--accent)' }}
-                                    >
-                                        <img
-                                            src={experience.logo}
-                                            alt={experience.company}
-                                            className="w-full h-full object-cover group-hover/logo:scale-110 transition-transform duration-500"
-                                            loading="lazy"
-                                            decoding="async"
-                                        />
-                                    </motion.div>
+    return (
+        <div className={`relative flex flex-col md:flex-row items-start justify-between mb-16 md:mb-24 w-full ${isEven ? 'md:flex-row-reverse' : ''}`}>
+            {/* Logo Marker on Timeline */}
+            <GsapReveal y={30} delay={index * 0.1} className="absolute left-10 md:left-1/2 md:ml-[-24px] top-6 z-20">
+                <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-white border-2 border-[var(--accent)] shadow-[0_0_20px_rgba(var(--accent-rgb),0.2)] flex items-center justify-center p-0 backdrop-blur-3xl transform -translate-x-1/2 md:translate-x-0 group hover:scale-110 transition-transform duration-500 overflow-hidden">
+                    <img
+                        src={experience.logo}
+                        alt={experience.company}
+                        className="w-full h-full object-contain transition-all duration-500"
+                    />
+                </div>
+            </GsapReveal>
+
+            {/* Content Card */}
+            <div className={`w-full md:w-[45%] pl-20 md:pl-0 text-left ${isEven ? 'md:text-left' : 'md:text-right'}`}>
+                <GsapReveal y={30} delay={index * 0.1}>
+                    <motion.div
+                        whileHover={{ y: -5 }}
+                        className="p-1 rounded-3xl bg-gradient-to-br from-[var(--border-color)]/50 to-transparent hover:from-[var(--accent)]/50 transition-all duration-500 group"
+                    >
+                        <div className="bg-[var(--bg-secondary)]/90 backdrop-blur-xl p-8 rounded-[1.4rem] border border-[var(--border-color)] group-hover:border-[var(--accent)]/50 transition-colors">
+                            {/* Header (No Logo here anymore) */}
+                            <div className={`flex flex-col gap-2 mb-6 ${isEven ? 'items-start' : 'md:items-end items-start'}`}>
+                                <h3 className={`font-bold [color:var(--text-primary)] group-hover:[color:var(--accent)] transition-colors ${DESIGN_CONFIG.HEADERS.H3}`}>
+                                    {experience.company}
+                                </h3>
+                                <div className="flex items-center gap-3">
+                                    <span className="text-[10px] font-black tracking-widest text-[var(--accent)] uppercase opacity-80">
+                                        {experience.year}
+                                    </span>
                                 </div>
-                            )}
+                                <h4 className="text-lg md:text-xl font-semibold [color:var(--text-primary)] opacity-90 mt-2">
+                                    {experience.role}
+                                </h4>
+                            </div>
 
-                            {/* Content Card */}
-                            <motion.div
-                                whileInView={{ opacity: 1, x: 0, y: 0 }}
-                                initial={{
-                                    opacity: 0,
-                                    x: isSingle ? 0 : (index % 2 === 0 ? -50 : 50),
-                                    y: isSingle ? 20 : 0
-                                }}
-                                viewport={{ once: true }}
-                                transition={{ duration: 0.8 }}
-                                className={`w-full ${isSingle ? 'md:w-[90%] lg:w-[85%]' : 'md:w-[42%]'} ${!isSingle && (index % 2 === 0 ? 'md:mr-auto' : 'md:ml-auto')} group gpu-accel`}
-                            >
-                                <div className="relative p-6 md:p-10 lg:p-14 rounded-3xl md:rounded-[3rem] border border-[color:var(--border-color)] [background-color:rgba(var(--bg-secondary),0.3)] blur-optimized hover:border-[color:var(--accent)] transition-[border-color,box-shadow] duration-700 group-hover:shadow-[0_0_40px_var(--accent-glow)] overflow-hidden">
-                                    {/* Subtle Background Accent */}
-                                    <div className="absolute -top-10 -right-10 w-32 h-32 [background-color:var(--accent)] opacity-0 group-hover:opacity-10 rounded-full blur-3xl transition-opacity duration-700" />
+                            {/* Achievements List */}
+                            <ul className={`space-y-4 mb-8 ${isEven ? 'text-left' : 'md:text-right text-left'}`}>
+                                {experience.highlights.map((highlight, i) => (
+                                    <li key={i} className={`flex gap-3 text-sm md:text-base leading-relaxed [color:var(--text-secondary)] opacity-70 group-hover:opacity-100 transition-opacity ${isEven ? 'items-start' : 'md:flex-row-reverse items-start'}`}>
+                                        <span className="mt-2 w-1.5 h-1.5 rounded-full bg-[var(--accent)] shrink-0 shadow-[0_0_5px_var(--accent)]" />
+                                        <span>{highlight}</span>
+                                    </li>
+                                ))}
+                            </ul>
 
-                                    <div className="flex flex-col gap-6 md:gap-8">
-                                        <div className="flex items-center gap-6">
-                                            {/* Logo - On desktop for single entry, it's inside the card heading area */}
-                                            <div className={`${isSingle ? 'block' : 'md:hidden'}`}>
-                                                <div className="w-[50px] h-[50px] md:w-[70px] md:h-[70px] rounded-full border-2 md:border-4 [border-color:var(--accent)] overflow-hidden flex items-center justify-center shadow-[0_0_15px_var(--accent-glow)] bg-white/5">
-                                                    <img
-                                                        src={experience.logo}
-                                                        alt={experience.company}
-                                                        className="w-full h-full object-cover"
-                                                    />
-                                                </div>
-                                            </div>
-
-                                            <div className="flex-1">
-                                                <h3 className="text-xl md:text-2xl lg:text-3xl font-bold [color:var(--text-primary)] group-hover:[color:var(--accent)] transition-colors line-height-tight">
-                                                    {experience.company}
-                                                </h3>
-                                                <span className="text-xs md:text-sm font-bold tracking-[0.2em] uppercase opacity-50 [color:var(--text-secondary)]">
-                                                    {experience.year}
-                                                </span>
-                                            </div>
-                                        </div>
-
-                                        <div className="space-y-4">
-                                            <h4 className="text-lg md:text-xl lg:text-2xl font-semibold [color:var(--text-primary)] opacity-90">
-                                                {experience.role}
-                                            </h4>
-                                            <p className="text-sm md:text-base lg:text-lg leading-relaxed [color:var(--text-secondary)] font-light opacity-80">
-                                                {experience.description}
-                                            </p>
-                                        </div>
-
-                                        <div className="flex flex-wrap gap-3">
-                                            {experience.technologies.map((tech, i) => (
-                                                <span key={i} className="px-3 md:px-4 py-1 text-[10px] md:text-[11px] font-bold [background-color:var(--bg-secondary)] [color:var(--text-primary)] border border-[color:var(--border-color)] rounded-xl tracking-wider uppercase opacity-60 group-hover:opacity-100 group-hover:border-[color:var(--accent)] group-hover:[color:var(--accent)] transition-colors duration-300">
-                                                    {tech}
-                                                </span>
-                                            ))}
-                                        </div>
-                                    </div>
-                                </div>
-                            </motion.div>
+                            {/* Tech Stack Pills */}
+                            <div className={`flex flex-wrap gap-2 ${isEven ? 'justify-start' : 'md:justify-end justify-start'}`}>
+                                {experience.technologies.map((tech, i) => (
+                                    <span key={i} className="px-3 py-1 text-[10px] font-bold bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-lg text-[var(--text-secondary)] group-hover:text-[var(--accent)] group-hover:border-[var(--accent)]/30 transition-all">
+                                        {tech}
+                                    </span>
+                                ))}
+                            </div>
                         </div>
+                    </motion.div>
+                </GsapReveal>
+            </div>
+
+            {/* Spacer for the other side */}
+            <div className="hidden md:block w-[45%]" />
+        </div>
+    )
+}
+
+const Experience = () => {
+    const containerRef = useRef(null)
+
+    // Ensure ScrollTrigger refreshes when component mounts to fix loading issues
+    useGSAP(() => {
+        ScrollTrigger.refresh()
+    }, { scope: containerRef })
+
+    return (
+        <section id="experience" ref={containerRef} className="relative py-24 border-t [border-color:var(--border-color)] overflow-hidden">
+            <GsapReveal y={50}>
+                <h2 className={`mb-24 text-center [color:var(--text-primary)] ${DESIGN_CONFIG.HEADERS.H2}`}>
+                    My Experience
+                </h2>
+            </GsapReveal>
+
+            <div className="max-w-7xl mx-auto px-6 relative">
+                <TimelinePath containerRef={containerRef} />
+
+                <div className="relative">
+                    {EXPERIENCES.map((exp, index) => (
+                        <ExperienceCard key={index} experience={exp} index={index} />
                     ))}
                 </div>
             </div>
-        </div>
+
+            {/* Background Texture */}
+            <div className="absolute inset-0 opacity-[0.02] pointer-events-none" style={{ backgroundImage: `radial-gradient(var(--accent) 0.5px, transparent 0.5px)`, backgroundSize: '30px 30px' }} />
+        </section>
     )
 }
 

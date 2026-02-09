@@ -3,6 +3,9 @@ import { ABOUT_TEXT } from "../constants"
 import { motion, useInView } from "framer-motion"
 import { FaMapMarkerAlt, FaClock, FaCircle, FaCode, FaBriefcase, FaRocket, FaTerminal, FaSun, FaStar, FaMoon } from "react-icons/fa"
 import { useTheme } from "../context/ThemeContext"
+import { DESIGN_CONFIG } from "../constants/design"
+import GsapReveal from "./GsapReveal"
+
 
 // Animated Counter Component
 const AnimatedCounter = ({ end, duration = 2, suffix = "" }) => {
@@ -75,23 +78,19 @@ const About = () => {
 
   return (
     <div className="pb-24">
-      <motion.h2
-        whileInView={{ opacity: 1, y: 0 }}
-        initial={{ opacity: 0, y: -50 }}
-        viewport={{ once: true }}
-        transition={{ duration: 1 }}
-        className="my-20 text-center text-4xl lg:text-5xl font-bold tracking-tight [color:var(--text-primary)]"
-      >
-        About <span className="[color:var(--accent)]">Me</span>
-      </motion.h2>
+      <GsapReveal y={50} delay={0.2}>
+        <h2
+          className={`my-20 text-center [color:var(--text-primary)] ${DESIGN_CONFIG.HEADERS.H2}`}
+        >
+          About Me
+        </h2>
+
+      </GsapReveal>
+
 
       <div className="flex flex-wrap lg:flex-nowrap items-stretch justify-center gap-6 md:gap-8 max-w-6xl mx-auto px-4">
         {/* Main About Text */}
         <motion.div
-          whileInView={{ opacity: 1, x: 0 }}
-          initial={{ opacity: 0, x: -50 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1 }}
           className="w-full lg:w-3/5 [background-color:rgba(var(--bg-secondary),0.2)] border [border-color:var(--border-color)] p-6 md:p-8 lg:p-12 rounded-2xl md:rounded-[2.5rem] blur-optimized gpu-accel"
           style={{ backgroundColor: 'color-mix(in srgb, var(--bg-secondary), transparent 80%)' }}
         >
@@ -100,52 +99,46 @@ const About = () => {
           </p>
         </motion.div>
 
+
         {/* Right Column - Stats & Status */}
         <div className="w-full lg:w-2/5 grid grid-cols-1 gap-4">
           {/* Animated Stats Cards */}
-          <div className="grid grid-cols-3 gap-3">
-            {stats.map((stat, index) => (
-              <motion.div
-                key={index}
-                whileInView={{ opacity: 1, y: 0 }}
-                initial={{ opacity: 0, y: 20 }}
-                viewport={{ once: true }}
-                transition={{
-                  duration: 0.8,
-                  delay: 0.1 * index + 0.2, // Stagger after the main text
-                  ease: [0.16, 1, 0.3, 1]
-                }}
-                whileHover={{ scale: 1.05, y: -5 }}
-                className="group relative overflow-hidden [background-color:rgba(var(--bg-secondary),0.4)] border [border-color:var(--border-color)] p-4 rounded-2xl blur-optimized hover:border-[color:var(--accent)] transition-all duration-500 text-center gpu-accel"
-                style={{ backgroundColor: 'color-mix(in srgb, var(--bg-secondary), transparent 60%)' }}
-              >
-                {/* Theme decoration in corner */}
-                <div className="absolute top-2 right-2">
-                  <ThemeIcon theme={theme} />
-                </div>
+          <GsapReveal stagger={0.1} y={30} delay={0.4}>
+            <div className="grid grid-cols-3 gap-3">
+              {stats.map((stat, index) => (
+                <motion.div
+                  key={index}
+                  whileHover={{ scale: 1.05, y: -5 }}
+                  className="group relative overflow-hidden [background-color:rgba(var(--bg-secondary),0.4)] border [border-color:var(--border-color)] p-4 rounded-2xl blur-optimized hover:border-[color:var(--accent)] transition-all duration-500 text-center gpu-accel"
+                  style={{ backgroundColor: 'color-mix(in srgb, var(--bg-secondary), transparent 60%)' }}
+                >
 
-                <stat.icon className="mx-auto text-xl [color:var(--accent)] mb-2 group-hover:scale-110 transition-transform" />
-                <p className="text-2xl font-bold [color:var(--text-primary)]">
-                  <AnimatedCounter end={stat.value} suffix={stat.suffix} />
-                </p>
-                <p className="text-[10px] [color:var(--text-secondary)] opacity-60 uppercase tracking-wide mt-1">
-                  {stat.label}
-                </p>
-                {/* Glow on hover */}
-                <div className="absolute inset-0 [background-color:var(--accent)] opacity-0 group-hover:opacity-5 transition-opacity rounded-2xl" />
-              </motion.div>
-            ))}
-          </div>
+                  {/* Theme decoration in corner */}
+                  <div className="absolute top-2 right-2">
+                    <ThemeIcon theme={theme} />
+                  </div>
+
+                  <stat.icon className="mx-auto text-xl [color:var(--accent)] mb-2 group-hover:scale-110 transition-transform" />
+                  <p className="text-2xl font-bold [color:var(--text-primary)]">
+                    <AnimatedCounter end={stat.value} suffix={stat.suffix} />
+                  </p>
+                  <p className="text-[10px] [color:var(--text-secondary)] opacity-60 uppercase tracking-wide mt-1">
+                    {stat.label}
+                  </p>
+                  {/* Glow on hover */}
+                  <div className="absolute inset-0 [background-color:var(--accent)] opacity-0 group-hover:opacity-5 transition-opacity rounded-2xl" />
+                </motion.div>
+              ))}
+            </div>
+          </GsapReveal>
+
 
           {/* Live Status Card */}
           <motion.div
-            whileInView={{ opacity: 1, y: 0 }}
-            initial={{ opacity: 0, y: 30 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
             className="group relative overflow-hidden [background-color:rgba(var(--bg-secondary),0.4)] border [border-color:var(--border-color)] p-8 rounded-[2.5rem] blur-optimized hover:border-[color:var(--accent)] transition-all duration-500 gpu-accel"
             style={{ backgroundColor: 'color-mix(in srgb, var(--bg-secondary), transparent 60%)' }}
           >
+
             <div className="relative z-10 space-y-6">
               <div className="flex items-center justify-between">
                 <h3 className="text-xs font-bold [color:var(--text-secondary)] uppercase tracking-widest opacity-70">Current Status</h3>

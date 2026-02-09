@@ -49,7 +49,7 @@ const ScrollToTop = () => {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.5, y: 20 }}
               onClick={scrollToTop}
-              className={`h-14 w-14 rounded-full [background-color:var(--bg-secondary)] border [border-color:var(--border-color)] [color:var(--accent)] flex items-center justify-center shadow-2xl active:scale-95 transition-all duration-300 backdrop-blur-md cursor-none hover:border-[color:var(--accent)] ${getThemeGlow()}`}
+              className="h-14 w-14 rounded-full [background-color:var(--bg-secondary)] border [border-color:var(--border-color)] [color:var(--accent)] flex items-center justify-center shadow-2xl active:scale-95 transition-all duration-300 backdrop-blur-md cursor-none hover:border-[color:var(--accent)] glow-btn"
               aria-label="Scroll to top"
             >
               <FaArrowUp className="text-xl" />
@@ -57,6 +57,7 @@ const ScrollToTop = () => {
           </Magnetic>
         </div>
       )}
+
     </AnimatePresence>
   )
 }

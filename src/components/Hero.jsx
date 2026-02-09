@@ -1,10 +1,17 @@
-import { useState, useEffect, memo } from "react"
+import { useState, useEffect, useRef, memo } from "react"
 import profilePicture from "../assets/TanmoyDebnathProfileNew.webp"
 import { HERO_CONTENT } from "../constants"
 import { motion } from 'framer-motion'
 import { TypeAnimation } from 'react-type-animation'
 import { useTheme } from "../context/ThemeContext"
 import Magnetic from "./Magnetic"
+import { useReducedMotion } from "../hooks/useReducedMotion"
+import { DESIGN_CONFIG } from "../constants/design"
+import gsap from "gsap"
+import { useGSAP } from "@gsap/react"
+import GsapReveal from "./GsapReveal"
+
+
 
 const containerVariants = {
   hidden: { opacity: 0, x: -100 },
@@ -20,33 +27,6 @@ const containerVariants = {
 const ChildVariants = {
   hidden: { x: -100, opacity: 0 },
   visible: { opacity: 1, x: 0, transition: { duration: 0.5 } }
-}
-
-// Hook to detect if user prefers reduced motion or is on mobile
-const useReducedMotion = () => {
-  const [reducedMotion, setReducedMotion] = useState(false)
-  const [isMobile, setIsMobile] = useState(false)
-
-  useEffect(() => {
-    // Check for reduced motion preference
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
-    setReducedMotion(mediaQuery.matches)
-
-    const handleChange = (e) => setReducedMotion(e.matches)
-    mediaQuery.addEventListener('change', handleChange)
-
-    // Check for mobile
-    setIsMobile(window.innerWidth < 768)
-    const handleResize = () => setIsMobile(window.innerWidth < 768)
-    window.addEventListener('resize', handleResize)
-
-    return () => {
-      mediaQuery.removeEventListener('change', handleChange)
-      window.removeEventListener('resize', handleResize)
-    }
-  }, [])
-
-  return reducedMotion || isMobile
 }
 
 // Theme-specific decorative elements - optimized for performance
@@ -227,23 +207,41 @@ const ThemeDecoration = ({ theme, isLowPerf }) => {
 const Hero = () => {
   const { theme } = useTheme()
   const isLowPerf = useReducedMotion()
+  const heroRef = useRef(null)
+
+  useGSAP(() => {
+    if (isLowPerf) return
+
+    gsap.to(".hero-parallax", {
+      yPercent: -30,
+
+
+      ease: "none",
+      scrollTrigger: {
+        trigger: heroRef.current,
+        start: "top top",
+        end: "bottom top",
+        scrub: true
+      }
+    })
+  }, { scope: heroRef, dependencies: [isLowPerf] })
 
   return (
-    <div className="pb-4 lg:mb-36 relative">
+    <div ref={heroRef} className="pb-4 lg:mb-36 relative min-h-[80vh] flex items-center justify-center">
+
       <ThemeDecoration theme={theme} isLowPerf={isLowPerf} />
 
-      <div className="flex flex-wrap lg:flex-row-reverse items-center justify-center relative z-10">
+      <div className="flex flex-col items-center justify-center text-center relative z-10 px-4">
+        {/* Image Section - Commented Out
         <div className="w-full lg:w-1/2">
           <div className="flex justify-center lg:p-12">
             <div className="relative group">
-              {/* Outer Glow Effect */}
               <motion.div
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 1.5, delay: 1.8 }}
                 className="absolute -inset-1 bg-[color:var(--accent)] rounded-3xl blur opacity-20 group-hover:opacity-40 transition duration-1000 group-hover:duration-200"
               />
-
               <motion.img
                 src={profilePicture}
                 alt="Tanmoy Debnath"
@@ -254,21 +252,36 @@ const Hero = () => {
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ duration: 1, delay: 1.5 }}
               />
-
-              {/* Overlay Gradient Filter */}
               <div className="absolute inset-0 rounded-3xl bg-gradient-to-tr from-[color:color-mix(in_srgb,var(--accent),transparent_90%)] via-transparent to-[color:color-mix(in_srgb,var(--accent),transparent_95%)] pointer-events-none mix-blend-overlay" />
             </div>
           </div>
         </div>
-        <div className="w-full lg:w-1/2">
-          <motion.div initial="hidden" animate="visible" variants={containerVariants} className="flex flex-col items-center lg:items-start lg:pl-10 mt-8 lg:mt-0">
-            <motion.h2
-              variants={ChildVariants}
-              className="pb-4 text-3xl sm:text-4xl md:text-5xl tracking-tight lg:text-7xl font-bold [color:var(--text-primary)] text-center lg:text-left"
+        */}
+
+        <GsapReveal stagger={0.2} y={50}>
+          <div className="flex flex-col items-center max-w-5xl hero-parallax">
+
+
+            <h1
+              className={`[color:var(--text-primary)] leading-none text-center ${DESIGN_CONFIG.HEADERS.H1}`}
+              style={{
+                fontFamily: 'var(--font-name)',
+                textShadow: '0 4px 60px rgba(0,0,0,0.5)'
+              }}
             >
-              Tanmoy Debnath
-            </motion.h2>
-            <motion.div variants={ChildVariants} className="h-[50px] md:h-[60px] lg:h-[80px]">
+              Tanmoy{' '}
+              <span
+                style={{
+                  background: 'linear-gradient(135deg, var(--accent) 0%, #4f46e5 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text'
+                }}
+              >
+                Debnath
+              </span>
+            </h1>
+            <div className="mt-8 h-[50px] md:h-[60px] lg:h-[80px]">
               <TypeAnimation
                 sequence={[
                   'Backend Developer',
@@ -282,30 +295,30 @@ const Hero = () => {
                 speed={50}
                 repeat={Infinity}
                 className="block bg-gradient-to-r from-stone-300 to-stone-600 bg-clip-text text-2xl md:text-3xl lg:text-4xl tracking-tight text-transparent font-medium"
-                style={{ backgroundImage: 'linear-gradient(to right, var(--text-primary), var(--text-secondary))' }}
+                style={{ backgroundImage: 'linear-gradient(to right, var(--text-primary), var(--text-secondary))', fontFamily: 'var(--font-display)' }}
               />
-            </motion.div>
-            <motion.p
-              variants={ChildVariants}
-              className="my-4 max-w-2xl py-2 text-base md:text-lg lg:text-xl leading-relaxed tracking-tight [color:var(--text-secondary)] font-light text-center lg:text-left px-4 lg:px-0"
+            </div>
+            <p
+              className="my-6 max-w-3xl py-2 text-base md:text-lg lg:text-xl leading-relaxed tracking-tight [color:var(--text-secondary)] font-light"
             >
               {HERO_CONTENT}
-            </motion.p>
-            <motion.div variants={ChildVariants}>
+            </p>
+            <div>
               <Magnetic>
                 <a
                   href="/Resume (4).pdf"
                   target="blank"
                   rel="noopener noreferrer"
                   download
-                  className="rounded-full px-8 md:px-10 py-3 md:py-4 text-sm md:text-base font-semibold transition-all duration-300 shadow-xl active:scale-95 [background-color:var(--text-primary)] [color:var(--bg-primary)] hover:[background-color:var(--accent)] hover:text-white inline-block"
+                  className="rounded-full px-8 md:px-10 py-3 md:py-4 text-sm md:text-base font-semibold transition-all duration-300 shadow-xl active:scale-95 [background-color:var(--text-primary)] [color:var(--bg-primary)] hover:[background-color:var(--accent)] hover:text-white inline-block cursor-none"
                 >
                   Download Resume
                 </a>
               </Magnetic>
-            </motion.div>
-          </motion.div>
-        </div>
+            </div>
+          </div>
+        </GsapReveal>
+
       </div>
     </div>
   )

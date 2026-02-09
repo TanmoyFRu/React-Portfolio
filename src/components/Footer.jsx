@@ -3,32 +3,7 @@ import { motion } from "framer-motion"
 import { FaGithub, FaLinkedin, FaEnvelope, FaHeart, FaCode } from "react-icons/fa"
 import { SiReact, SiTailwindcss } from "react-icons/si"
 import { useTheme } from "../context/ThemeContext"
-
-// Hook to detect if user prefers reduced motion or is on mobile
-const useReducedMotion = () => {
-    const [shouldReduce, setShouldReduce] = useState(false)
-
-    useEffect(() => {
-        const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
-        const isMobile = window.innerWidth < 768
-        setShouldReduce(mediaQuery.matches || isMobile)
-
-        const handleChange = () => {
-            const isMobileNow = window.innerWidth < 768
-            setShouldReduce(mediaQuery.matches || isMobileNow)
-        }
-
-        mediaQuery.addEventListener('change', handleChange)
-        window.addEventListener('resize', handleChange)
-
-        return () => {
-            mediaQuery.removeEventListener('change', handleChange)
-            window.removeEventListener('resize', handleChange)
-        }
-    }, [])
-
-    return shouldReduce
-}
+import { useReducedMotion } from "../hooks/useReducedMotion"
 
 const SimpleGradient = ({ theme }) => {
     const gradients = {
@@ -90,7 +65,7 @@ const MatrixRain = ({ reduced }) => {
             }
         }
 
-        const interval = setInterval(draw, 60) 
+        const interval = setInterval(draw, 60)
         window.addEventListener('resize', resizeCanvas)
         return () => { clearInterval(interval); window.removeEventListener('resize', resizeCanvas) }
     }, [reduced, isVisible])
@@ -155,7 +130,7 @@ const StarField = ({ reduced }) => {
     }, [reduced, isVisible])
 
     if (reduced) return <SimpleGradient theme="midnight" />
-    return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full opacity-30 pointer-events-none" />
+    return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full opacity-60 pointer-events-none" />
 }
 
 // Nebula Effect - Cosmic Theme (Optimized)
@@ -224,7 +199,9 @@ const NebulaEffect = ({ reduced }) => {
 // Simple Solar Glow for mobile (no WebGL)
 const SolarGlow = () => (
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[150%] h-64 rounded-[100%] bg-gradient-radial from-orange-500/20 via-yellow-300/10 to-transparent blur-3xl opacity-50" />
+        <div className="absolute -top-20 left-1/2 -translate-x-1/2 w-[200%] h-80 rounded-[100%] bg-gradient-to-b from-orange-400/30 via-yellow-300/20 to-transparent blur-3xl" />
+        <div className="absolute top-0 left-1/4 w-64 h-64 bg-orange-500/20 rounded-full blur-[100px]" />
+        <div className="absolute top-10 right-1/4 w-48 h-48 bg-yellow-400/15 rounded-full blur-[80px]" />
     </div>
 )
 
@@ -285,10 +262,11 @@ const Footer = () => {
     ]
 
     const navLinks = [
-        { name: "About", href: "#about" },
+        { name: "About Me", href: "#about" },
         { name: "Projects", href: "#projects" },
-        { name: "Experience", href: "#experience" },
-        { name: "Contact", href: "#contact" },
+        { name: "My Experience", href: "#experience" },
+        { name: "My Education", href: "#education" },
+        { name: "Contact Me", href: "#contact" },
     ]
 
     const renderThemeEffect = () => {

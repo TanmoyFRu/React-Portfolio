@@ -4,22 +4,32 @@ import project4 from "../assets/projects/blog-auth-v2.webp";
 import yupchaLogo from "../assets/yupcha_logo.webp";
 import collegeLogo from "../assets/college logo.webp";
 
-export const HERO_CONTENT = `I am a passionate backend developer with a deep expertise in crafting robust, scalable, and secure server-side applications. I specialize in Python and FastAPI, with a strong foundation in database management (PostgreSQL, MySQL, MongoDB) and real-time systems. My goal is to build high-performance APIs and autonomous systems that solve complex backend challenges and drive seamless digital experiences.`;
+export const HERO_CONTENT = `I am a specialized Backend & Automation Engineer with a profound focus on intelligent systems and scalable infrastructure. I bridge the gap between robust backend architecture and Machine Learning, with deep expertise in PyTorch, YOLO, and ResNet architectures. My work spans from architecting high-performance FastAPI ecosystems to deploying containerized services via Kubernetes, always with a commitment to zero-downtime CI/CD and exceptional user experiences.`;
 
-export const ABOUT_TEXT = `Backend developer at Yupcha, specializing in RESTful APIs, authentication systems, and scalable database architecture. I design and build automation tools, data pipelines, and high-performance backend services with a focus on clean code and system reliability.
+export const ABOUT_TEXT = `Backend developer at Yupcha, where I specialize in the intersection of automation, machine learning, and scalable cloud infrastructure. I design and build highly-efficient APIs, autonomous data pipelines, and intelligent computer vision systems using PyTorch and YOLO.
 
-My tech stack includes Python, FastAPI, PostgreSQL, Redis, and Docker. I enjoy solving complex problems, optimizing queries, and building systems that scale. When I'm not coding, I'm exploring new technologies and contributing to open-source projects.`;
+With a strong foundation in ResNet architectures and DevOps practices (Docker, Kubernetes), I focus on creating systems that are not just scalable, but also self-optimizing. I thrive on solving complex backend challenges and integrating ML models into production-grade environments with a focus on reliability and performance.`;
+
 
 export const EXPERIENCES = [
   {
-    year: "Sept 2025 - Present",
+    year: "Sept 2024 - Present",
     role: "Automation Engineer & Backend Developer",
     company: "Yupcha",
     logo: yupchaLogo,
-    description: `Architecting and managing automated CI/CD pipelines to ensure seamless production releases. Building scalable backend APIs using FastAPI and managing data persistence with PostgreSQL and Redis. Implementing robust CRUD operations and complex business logic for core product features. Integrating automation tools to improve system reliability and developer productivity.`,
-    technologies: ["Python", "FastAPI", "PostgreSQL", "Redis", "Docker", "Kubernetes", "CI/CD"],
+    description: "Spearheading automation initiatives and backend architecture to drive system scale and intelligence.",
+    highlights: [
+      "Architected enterprise-grade CI/CD pipelines ensuring 100% automated, zero-downtime production releases.",
+      "Engineered core backend features and automation logic that significantly optimized the overall user experience.",
+      "Developed and deployed computer vision models using PyTorch, YOLO, and ResNet for intelligent data processing.",
+      "Deep expertise in ResNet architectures, implementing custom adaptations for specialized backend automation tasks.",
+      "Managed robust containerized infrastructure using Docker and Kubernetes (K8s) for high-availability services.",
+      "Built high-performance RESTful APIs with FastAPI, leveraging PostgreSQL and Redis for real-time data handling."
+    ],
+    technologies: ["Python", "FastAPI", "PyTorch", "YOLO", "Docker", "Kubernetes", "CI/CD"],
   },
 ];
+
 
 export const PROJECTS = [
   {
@@ -41,6 +51,7 @@ export const PROJECTS = [
   {
     title: "User-Blog Authentication API",
     image: project4,
+    imageScale: "scale-[1.6]",
     description:
       "A secure RESTful API with JWT authentication and full CRUD capabilities. Implements complex relational mapping between users and content with robust password hashing.",
     technologies: ["FastAPI", "JWT", "SQLAlchemy", "SQLite"],
@@ -54,9 +65,18 @@ export const EDUCATION = [
     degree: "B.Tech in Computer Science and Engineering",
     institution: "Techno College of Engineering Agartala",
     logo: collegeLogo,
-    description: "Focusing on Software Engineering, Backend Systems, and Scalable Architectures. Actively involved in developing autonomous systems and real-time AI integrations.",
+    description: "Focusing on the convergence of software engineering and intelligent systems development.",
+    focusAreas: [
+      "Backend System Architecture",
+      "Scalable Cloud Infrastructure",
+      "Machine Learning Integrations",
+      "Autonomous System Design",
+      "Advanced Data Structures"
+    ],
   },
 ];
+
+
 
 export const CONTACT = {
   address: "Barjala, Agartala, Tripura 799002 ",
