@@ -41,7 +41,7 @@ const TimelinePath = ({ containerRef }) => {
 }
 
 const AcademicCard = ({ edu, index }) => {
-    const isEven = index % 2 === 0
+    const isEven = index % 2 !== 0
 
     return (
         <div className={`relative flex flex-col md:flex-row items-start justify-between mb-16 md:mb-24 w-full ${isEven ? 'md:flex-row-reverse' : ''}`}>

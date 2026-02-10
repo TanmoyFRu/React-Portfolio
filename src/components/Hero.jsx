@@ -227,11 +227,11 @@ const Hero = () => {
   }, { scope: heroRef, dependencies: [isLowPerf] })
 
   return (
-    <div ref={heroRef} className="pb-4 lg:mb-36 relative min-h-[80vh] flex items-center justify-center">
+    <div ref={heroRef} className="pb-4 lg:mb-36 relative min-h-[50vh] md:min-h-[70vh] lg:min-h-[80vh] flex items-center justify-center">
 
       <ThemeDecoration theme={theme} isLowPerf={isLowPerf} />
 
-      <div className="flex flex-col items-center justify-center text-center relative z-10 px-4">
+      <div className="flex flex-col items-center justify-center text-center relative z-10 px-4 pt-12 md:pt-0">
         {/* Image Section - Commented Out
         <div className="w-full lg:w-1/2">
           <div className="flex justify-center lg:p-12">
