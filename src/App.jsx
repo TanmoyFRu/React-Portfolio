@@ -19,6 +19,10 @@ import { motion, AnimatePresence, useScroll, useSpring } from "framer-motion"
 import { FaTerminal } from "react-icons/fa"
 import Magnetic from "./components/Magnetic"
 import Terminal from "./components/Terminal"
+import gsap from "gsap"
+import { ScrollTrigger } from "gsap/ScrollTrigger"
+
+gsap.registerPlugin(ScrollTrigger)
 
 const App = () => {
   const [isTerminalOpen, setIsTerminalOpen] = useState(false)

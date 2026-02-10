@@ -31,7 +31,7 @@ const TimelinePath = ({ containerRef }) => {
     }, { scope: containerRef })
 
     return (
-        <div className="absolute left-10 md:left-1/2 top-0 bottom-0 w-[2px] bg-[var(--border-color)]/30 overflow-hidden">
+        <div className="hidden md:block absolute left-10 md:left-1/2 top-0 bottom-0 w-[2px] bg-[var(--border-color)]/30 overflow-hidden">
             <div
                 ref={lineRef}
                 className="w-full h-full bg-gradient-to-b from-[var(--accent)] via-[var(--accent)] to-transparent shadow-[0_0_10px_var(--accent)]"
@@ -46,7 +46,7 @@ const AcademicCard = ({ edu, index }) => {
     return (
         <div className={`relative flex flex-col md:flex-row items-start justify-between mb-16 md:mb-24 w-full ${isEven ? 'md:flex-row-reverse' : ''}`}>
             {/* Logo Marker on Timeline */}
-            <GsapReveal y={30} delay={index * 0.1} className="absolute left-10 md:left-1/2 md:ml-[-24px] top-6 z-20">
+            <GsapReveal y={30} delay={index * 0.1} className="hidden md:block absolute left-10 md:left-1/2 md:ml-[-24px] top-6 z-20">
                 <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-white border-2 border-[var(--accent)] shadow-[0_0_20px_rgba(var(--accent-rgb),0.2)] flex items-center justify-center p-0 backdrop-blur-3xl transform -translate-x-1/2 md:translate-x-0 group hover:scale-110 transition-transform duration-500 overflow-hidden">
                     <img
                         src={edu.logo}
@@ -57,7 +57,7 @@ const AcademicCard = ({ edu, index }) => {
             </GsapReveal>
 
             {/* Content Card */}
-            <div className={`w-full md:w-[45%] pl-20 md:pl-0 text-left ${isEven ? 'md:text-left' : 'md:text-right'}`}>
+            <div className={`w-full md:w-[45%] text-left ${isEven ? 'md:text-left' : 'md:text-right'}`}>
                 <GsapReveal y={30} delay={index * 0.1}>
                     <motion.div
                         whileHover={{ y: -5 }}
