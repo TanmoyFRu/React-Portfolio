@@ -255,10 +255,10 @@ const CYBER_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*!"
 const TARGET = "TANMOY"
 
 const THEME_STYLES = {
-    midnight: { stroke: "#818cf8", glow: "rgba(99, 102, 241, 0.3)" },
-    solar: { stroke: "#b45309", glow: "rgba(180, 113, 9, 0.25)" },
-    cosmic: { stroke: "#c084fc", glow: "rgba(192, 132, 252, 0.3)" },
-    emerald: { stroke: "#34d399", glow: "rgba(52, 211, 153, 0.3)" },
+    midnight: { stroke: "#818cf8", glow: "rgba(99, 102, 241, 0.65)" },
+    solar: { stroke: "#d97706", glow: "rgba(217, 119, 6, 0.45)" },
+    cosmic: { stroke: "#c084fc", glow: "rgba(192, 132, 252, 0.65)" },
+    emerald: { stroke: "#34d399", glow: "rgba(52, 211, 153, 0.65)" },
 }
 
 const CyberText = ({ theme }) => {
@@ -337,11 +337,11 @@ const CyberText = ({ theme }) => {
                 className="text-[14vw] font-black tracking-[0.08em] whitespace-nowrap leading-[0.75] text-center"
                 style={{
                     fontFamily: "'Orbitron', sans-serif",
-                    opacity: isSolar ? 0.18 : 0.12,
+                    opacity: isSolar ? 0.35 : 0.26,
                     WebkitTextFillColor: "transparent",
-                    WebkitTextStroke: `2px ${ts.stroke}`,
+                    WebkitTextStroke: `3px ${ts.stroke}`,
                     paintOrder: "stroke fill",
-                    textShadow: `0 0 40px ${ts.glow}, 0 0 80px ${ts.glow}`,
+                    textShadow: `0 0 20px ${ts.stroke}, 0 0 45px ${ts.glow}, 0 0 90px ${ts.glow}`,
                 }}
             >
                 {displayText.map((char, i) => (

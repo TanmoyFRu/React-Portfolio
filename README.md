@@ -174,7 +174,14 @@ Personal portfolio with multi-theme support, interactive terminal, GSAP animatio
 
 ### Experience
 
-**Automation Engineer & Backend Developer** @ Yupcha _(Sept 2024 - Present)_
+**Junior Software Engineer** @ xLayer Technologies _(Jun 2026 - Present)_
+
+- Collaborate with cross-functional teams in agile sprints to develop, maintain, and scale full-stack web applications
+- Develop and optimize REST APIs using Tornado, improving system reliability and reduce average endpoint response times
+- Design responsive user interfaces in Angular and document technical specifications to streamline API integrations
+- Manage schema designs and optimize PostgreSQL and MongoDB database queries to accelerate data retrieval speeds
+
+**Automation Engineer & Backend Developer** @ Yupcha _(Sep 2025 - May 2026)_
 
 - Architected enterprise-grade CI/CD pipelines ensuring 100% automated, zero-downtime production releases
 - Developed and deployed computer vision models using PyTorch, YOLO, and ResNet
